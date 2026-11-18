@@ -60,6 +60,20 @@ Speedup over the two-pass baseline, median `computeBCG` ratio, 29 graphs ×
 - The remaining cells are baseline failures, not gaps in ours: 72 where it
   exceeded its own allocation budget, 35 timeouts, 4 CUDA faults.
 
+**If you want one batch size, use `-b 500000`.** It is the only size that
+maximises both coverage and median speedup at once (22 of 29 graphs, median
+1.51, geomean 1.62, ahead on 18/22), and the only one where no cell is a
+timeout or a fault -- every baseline failure there is its own allocation cap,
+which is the clean capacity comparison. 13-524 batches per graph, our peak
+memory 1.0-25.4 GB of a 45.5 GB card. Fixing it costs 16% against tuning `b`
+per graph.
+
+A rule of the form `b = alpha * |E|` is worse at every alpha tried
+(0.5-10%, best median 1.47): the direction of the `b` trend is set by density
+`|E|/|V|`, not by `|E|`, so a rule keyed on edge count moves the sparse and
+dense graphs the same way when they want opposite things. Sparse graphs
+(`|E|/|V|` below ~20) speed up as `b` falls; dense ones speed up as `b` rises.
+
 Cutting `max_allot` from `5b+6n` to `3b+1.5n` and `V_fb` from `2n` to `1.0n`
 (the old coefficients were sized for an aligned-pair id scheme that no longer
 exists) saved **49%** of device memory — 496 GB → 252 GB across the suite,

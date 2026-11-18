@@ -25,10 +25,15 @@ def region(s, start, end, what):
 
 # legend: between the fixed lead-in and the brace that closes \caption
 L_A, L_B = "$|E|$ is the undirected edge count.\n", "}\n\\label{tab:speedup}"
+# table head: column spec, the batch-size spanner, cmidrule and header row.
+# Adding the |V| column changed all four, so splicing only the rows would have
+# left the self-contained files with 13 columns of spec and 14 of data.
+H_A, H_B = "\\begin{tabular}", "\\midrule\n"
 # data rows: the body of the tabular
 R_A, R_B = "\\midrule\n", "\\bottomrule"
 
 _, _, legend = region(src, L_A, L_B, "legend")
+_, _, head = region(src, H_A, H_B, "head")
 _, _, rows = region(src, R_A, R_B, "rows")
 nrow = len([x for x in rows.splitlines() if x.startswith("~~")])
 assert nrow > 20, f"only {nrow} data rows parsed from results.tex -- refusing"
@@ -36,7 +41,9 @@ assert nrow > 20, f"only {nrow} data rows parsed from results.tex -- refusing"
 for path in sys.argv[1:]:
     s = open(path).read()
     out = s
-    for a, b, new, what in ((L_A, L_B, legend, "legend"), (R_A, R_B, rows, "rows")):
+    for a, b, new, what in ((L_A, L_B, legend, "legend"),
+                            (H_A, H_B, head, "head"),
+                            (R_A, R_B, rows, "rows")):
         try:
             i, j, old = region(out, a, b, what)
         except ValueError:

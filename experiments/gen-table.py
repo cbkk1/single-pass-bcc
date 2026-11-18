@@ -87,14 +87,19 @@ def cell(g, b):
 
 rows, n_done, n_cells = [], 0, 0
 for cat, graphs in CATS:
-    rows.append(r"\multicolumn{%d}{l}{\emph{%s}} \\" % (len(BSS) + 2, cat))
+    rows.append(r"\multicolumn{%d}{l}{\emph{%s}} \\" % (len(BSS) + 3, cat))
     for g in graphs:
         cs = [cell(g, b) for b in BSS]
         n_cells += len(cs)
         n_done += sum(1 for c in cs if c[0].isdigit())
         m = SIZES.get(g, {}).get("Eund")
+        v = SIZES.get(g, {}).get("V")
         msz = f"{m/1e6:.1f}" if m else "--"
-        rows.append("~~" + g.replace("_", r"\_") + " & " + msz + " & "
+        # |V| in millions like |E|, but two decimals under 1 M: five graphs
+        # here have 0.4-0.9 M vertices and one decimal collapses them all to
+        # "0.4"/"0.5", which hides the density differences the b-trend turns on.
+        vsz = ("--" if not v else f"{v/1e6:.2f}" if v < 1e6 else f"{v/1e6:.1f}")
+        rows.append("~~" + g.replace("_", r"\_") + " & " + vsz + " & " + msz + " & "
                     + " & ".join(cs) + r" \\")
 
 body = "\n".join(rows)
@@ -125,17 +130,17 @@ slower. $|E|$ is the undirected edge count.
 \label{tab:speedup}
 \small
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{lr%s}
+\begin{tabular}{lrr%s}
 \toprule
- & & \multicolumn{%d}{c}{batch size $b$} \\
-\cmidrule(l){3-%d}
-Dataset & $|E|$\,(M) & %s \\
+ & & & \multicolumn{%d}{c}{batch size $b$} \\
+\cmidrule(l){4-%d}
+Dataset & $|V|$\,(M) & $|E|$\,(M) & %s \\
 \midrule
 %s
 \bottomrule
 \end{tabular}
 \end{table*}
-""" % (n_done, n_cells, legend, "r" * len(BSS), len(BSS), len(BSS) + 2,
+""" % (n_done, n_cells, legend, "r" * len(BSS), len(BSS), len(BSS) + 3,
        " & ".join(HDR), body)
 
 open(OUT, "w").write(tex)
