@@ -103,6 +103,8 @@ int construct_spanning_tree(GPU_BCG& g_bcg_ds) {
             d_parentEdge, 
             d_rep);
     
+    // The forest's roots, count and per-component offsets were prepared by
+    // forest_metadata() before this call.
     int root = 0;
 
     auto end = std::chrono::high_resolution_clock::now();
@@ -110,7 +112,7 @@ int construct_spanning_tree(GPU_BCG& g_bcg_ds) {
     // std::cout << "One round of spanning tree construction takes: " << dur << " ms." << "\n";
 
     start = std::chrono::high_resolution_clock::now();
-    cuda_euler_tour(nodes, root, g_bcg_ds);
+    cuda_euler_tour(nodes, g_bcg_ds.n_comp, g_bcg_ds);
 
     // end = std::chrono::high_resolution_clock::now();
     // dur = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();

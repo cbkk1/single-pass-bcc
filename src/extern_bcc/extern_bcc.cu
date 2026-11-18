@@ -8,6 +8,7 @@
 #include <iterator>
 #include <iostream>
 #include <functional>
+#include <cstdlib>
 
 //---------------------------------------------------------------------
 // Utility Functions
@@ -20,11 +21,15 @@
 // Spanning Tree and Biconnected Components (BCC) related functions
 //---------------------------------------------------------------------
 #include "extern_bcc/bcg_memory_utils.cuh"
-#include "extern_bcc/spanning_tree.cuh"
 #include "extern_bcc/edge_cleanup.cuh"
 #include "extern_bcc/extern_bcc.cuh"
-#include "fast_bcc/fast_bcc.cuh"
-#include "fast_bcc/repair.cuh"
+#include "extern_bcc/single_pass.cuh"
+#include "extern_bcc/serial_bcc.cuh"
+#include "extern_bcc/lch.cuh"
+
+// Set from -g / --gpu-bcc in main.cu: run Algorithm 3 with dense ids and
+// Compress-Graph on the GPU, instead of split ranges with the host Tarjan.
+extern bool g_gpu_bcc;
 
 // #define DEBUG
 
@@ -36,60 +41,6 @@
  |_|   |_|  \___/ \___\___||___/___/ |____/ \__,_|\__\___|_| |_|
                                                                 
 */
-__global__ 
-void update_edges_kernel(
-    int* bcc_num, int* d_mapping,                           // Mapping info
-    uint64_t* d_prev_batch_edges,                           // Previous Graph edges
-    uint64_t* d_new_batch_edges,                            // Newly copied edges
-    uint64_t* d_edge_buffer,                               // Output arrays
-    long prev_num_edges, long totalSize) {                  // Sizes for each array
-
-    long idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx >= totalSize) return;
-
-    // if(idx == 0) {
-    //     printf("BCC Number array:\n");
-    //     for(int i = 0; i < 21; ++i) {
-    //         printf("bcc[%d]: %d\n", i, bcc_num[i]);
-    //     }
-    // }
-    
-    if(idx < prev_num_edges) {
-
-        uint64_t i = d_prev_batch_edges[idx];
-
-        int u = i >> 32;  // Extract higher 32 bits
-        int v = i & 0xFFFFFFFF; // Extract lower 32 bits
-
-        #ifdef DEBUG
-            // printf("Printing from update_edges_kernel:\n");
-            printf("u: %d, v: %d, idx: %llu\n", u, v, idx);
-        #endif
-        
-        int new_u = min(bcc_num[u], bcc_num[v]);
-        int new_v = max(bcc_num[u], bcc_num[v]);
-
-        d_edge_buffer[idx] = (static_cast<uint64_t>(new_u) << 32) | (new_v & 0xFFFFFFFFLL);
-
-    } else {
-        uint64_t i = d_new_batch_edges[idx - prev_num_edges];
-
-        int u = i >> 32;  // Extract higher 32 bits
-        int v = i & 0xFFFFFFFF; // Extract lower 32 bits
-        
-        #ifdef DEBUG
-            printf("u: %d, v: %d, idx: %llu\n", u, v, idx);
-        #endif
-
-        int mapped_u = d_mapping[u];
-        int mapped_v = d_mapping[v];
-
-        int new_u = min(bcc_num[mapped_u], bcc_num[mapped_v]);
-        int new_v = max(bcc_num[mapped_u], bcc_num[mapped_v]);
-
-        d_edge_buffer[idx] = (static_cast<uint64_t>(new_u) << 32) | (new_v & 0xFFFFFFFFLL);
-    }
-}
 
 /*
   _   _           _       _         __  __                   _             
@@ -100,134 +51,33 @@ void update_edges_kernel(
        |_|                                      |_|   |_|            |___/ 
 */
 
-__global__
-void update_mapping(int* d_mapping, int* bcc_num, int original_num_verts) {
-
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-
-    if (idx < original_num_verts) {
-        d_mapping[idx] = bcc_num[d_mapping[idx]];
-    }
-}
-
 void construct_BCG(
-    GPU_BCG& g_bcg_ds, 
-    const size_t BatchSize, 
-    const bool isLastBatch, 
+    GPU_BCG& g_bcg_ds,
+    const size_t BatchSize,
+    const bool isLastBatch,
     TimerManager& timer_manager) {
 
-    int numVert                     =   g_bcg_ds.numVert;
-    int original_num_verts          =   g_bcg_ds.orig_numVert;
-    long numEdges                   =   g_bcg_ds.numEdges;
-    long batchSize                  =   g_bcg_ds.batchSize;  
+    auto start = std::chrono::high_resolution_clock::now();
 
-    uint64_t* d_prev_batch_edges    =   g_bcg_ds.updated_edgelist;
-    uint64_t* d_new_batch_edges     =   g_bcg_ds.d_edgelist;
-
-    // old_number_of_edges + new_batch_size
-    long totalSize = g_bcg_ds.numEdges + BatchSize;
-    // std::cout <<"Edge Count after adding new batch / totalSize: " << totalSize << "\n";
-    assert(totalSize <= g_bcg_ds.max_allot);
-    
-    long threadsPerBlock = maxThreadsPerBlock;
-
-    size_t blocks = (totalSize + threadsPerBlock - 1) / threadsPerBlock;
-
-    auto start = std::chrono::high_resolution_clock::now();    
-    update_edges_kernel<<<blocks, threadsPerBlock>>>(
-        g_bcg_ds.d_rep,                  // BCC numbers (int)
-        g_bcg_ds.d_mapping,             // Vertex ID mapping (int)
-        d_prev_batch_edges,             // Previous batch edges (uint64_t*)
-        d_new_batch_edges,              // New batch of edges (uint64_t*)
-        g_bcg_ds.d_edge_buffer,         // Output after remapping for edges (uint64_t*)
-        g_bcg_ds.numEdges,              // Previous PBCG graph edge count (long)
-        totalSize                       // Previous Edge Count + New Edge Count (long)
-    );
-    CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize update_edges_kernel");
-
-    // std::cout << "Update edges kernel successfully completed." << "\n";
-    blocks = (original_num_verts + threadsPerBlock - 1) / threadsPerBlock;
-    
-    // Update the actual vertex mapping array for the original graph
-    update_mapping<<<blocks, threadsPerBlock>>>(
-        g_bcg_ds.d_mapping,      // Vertex ID mapping
-        g_bcg_ds.d_rep,  // Important BCC numbers
-        original_num_verts       // Original number of vertices
-    );
-    CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize update_mapping");
-
-    #ifdef DEBUG
-        std::cout << "Updated Edgelist after transformation: " << "\n";
-        print_device_edges(g_bcg_ds.d_edge_buffer, totalSize);
-    #endif
-
-    // do clean-up, i.e. remove self loops and duplicates.
-    remove_self_loops_duplicates(
-        g_bcg_ds.d_edge_buffer,       // Input edge-stream 
-        totalSize,                    // Total number of items
-        g_bcg_ds.d_flags,             // Flags for marking
-        g_bcg_ds.h_num_selected_out,  // Output: selected count
-        g_bcg_ds.d_num_selected_out,  // Output: selected count
-        g_bcg_ds.updated_edgelist    // Output: Updated Edgelist
-    );
-
-    g_bcg_ds.numEdges = totalSize;
-    
-    // Check if at anytime the alloted numEdges is becoming less than the current numEdges
-    assert(g_bcg_ds.numEdges <= g_bcg_ds.max_allot); 
+    // Single-pass: phase 3 (de-merge) -> phase 4 (BCC) -> phase 5 (compose).
+    // There is no transform step and no pass-1 spanning tree any more.
+    single_pass_batch(g_bcg_ds, (long)BatchSize);
 
     auto end = std::chrono::high_resolution_clock::now();
     auto dur = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    
-    // std::cout << "One round of transformation takes: " << dur << " ms." << "\n";
-
-    timer_manager.add_function_time("Transform", dur);
-
-    if(isLastBatch) {
-        start = std::chrono::high_resolution_clock::now();
-        repair(g_bcg_ds);
-        end = std::chrono::high_resolution_clock::now();
-        dur = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-
-        // std::cout << "\n*********** Repairing took: " << dur << " ms. ***********n\n" << std::endl;
-        timer_manager.add_function_time("Repair", dur);
-    }
-
-    // call cuda_bcc
-    // std::cout << "Calling cuda_bcc\n";
-        
-    start = std::chrono::high_resolution_clock::now();
-    Fast_BCC(g_bcg_ds, isLastBatch);
-
-    end = std::chrono::high_resolution_clock::now();
-    dur = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    
-    if(!isLastBatch)
-        timer_manager.add_function_time("i-BCC", dur);
-    else
-        timer_manager.add_function_time("Repair", dur);
-
-    // std::cout << "\n*********** One round of i-BCC takes: " << dur << " ms. ***********n\n" << std::endl;
-}
-
-__global__
-void init_bcc_num(int* parent, int n) {
-    int tid = blockDim.x * blockIdx.x + threadIdx.x;
-    if(tid < n) {
-        parent[tid] = tid;
-    }
+    timer_manager.add_function_time("Single-pass batch", dur);
 }
 
 int extern_bcc(GPU_BCG& g_bcg_ds) {
-    std::cout << "Started Spanning Tree construction." << std::endl;
+    // Single-pass: no pass-1 spanning tree. That pass cost a full read of the
+    // edge stream, and dropping it is the point of the algorithm. The active
+    // edge set therefore starts EMPTY rather than holding a tree of n-1 edges.
     Timer myTimer;
-    construct_batch_spanning_tree(g_bcg_ds);
-
-    auto dur = myTimer.stop();
-    std::cout <<"\nSpanning Tree finished in " << dur <<" ms.\n\n" << std::endl;
+    auto dur = 0L;
 
     TimerManager timer_manager;
-    timer_manager.add_function_time("Spanning Tree", dur);
+
+    g_bcg_ds.numEdges = 0;
 
     // -------------------- Assigning to local variables -------------------- //
     const uint64_t* h_edgelist  =   g_bcg_ds.h_edgelist;
@@ -245,12 +95,6 @@ int extern_bcc(GPU_BCG& g_bcg_ds) {
     if (edges % batch_size != 0) {
         num_batches++;
     }
-
-    const long numThreads = 1024;
-    int numBlocks = (nodes + numThreads - 1) / numThreads;
-
-    init_bcc_num<<<numBlocks, numThreads>>>(g_bcg_ds.d_rep, nodes);
-    CUDA_CHECK(cudaDeviceSynchronize(), "Error in launching initialise kernel");
 
     myTimer.reset();
 
@@ -284,7 +128,30 @@ int extern_bcc(GPU_BCG& g_bcg_ds) {
 
         bool isLastBatch = (i == num_batches - 1);
 
-        construct_BCG(g_bcg_ds, num_elements_in_batch, isLastBatch, timer_manager);
+        if (g_gpu_bcc) single_pass_batch_gpu(g_bcg_ds, num_elements_in_batch);
+        else            construct_BCG(g_bcg_ds, num_elements_in_batch, isLastBatch, timer_manager);
+
+        // BCC_PREFIX=1: after every batch, compare the count derivable from the
+        // current BCG against a serial pass over the prefix seen so far. The
+        // first batch that diverges is the one that lost something.
+        if (g_gpu_bcc && getenv("BCC_PREFIX")) {
+            const int two_nb = g_bcg_ds.n_b;
+            long br = 0;
+            if (g_bcg_ds.numEdges > 0) {
+                std::vector<uint64_t> fin(g_bcg_ds.numEdges);
+                CUDA_CHECK(cudaMemcpy(fin.data(), g_bcg_ds.updated_edgelist,
+                                      g_bcg_ds.numEdges * sizeof(uint64_t), cudaMemcpyDeviceToHost), "prefix: edges");
+                for (uint64_t e : fin) {
+                    int u = (int)(e >> 32), v = (int)(e & 0xFFFFFFFF);
+                    if (u >= two_nb && v >= two_nb) ++br;
+                }
+            }
+            long got = g_bcg_ds.n_b + br;
+            long want = serial_bcc_count(g_bcg_ds.h_edgelist, end, nodes, nullptr, nullptr);
+            std::cout << "  [prefix] batch " << i << " edges<=" << end
+                      << "  got " << got << "  want " << want
+                      << (got == want ? "" : "   <<<< DIVERGES") << "\n";
+        }
     }
 
     // std::cout << "Total Copy Times: " << total << " ms." << "\n" << std::endl;
@@ -299,15 +166,127 @@ int extern_bcc(GPU_BCG& g_bcg_ds) {
 
     timer_manager.print_times();
 
-    std::vector<int> host_rep(g_bcg_ds.numVert);
-    CUDA_CHECK(cudaMemcpy(host_rep.data(), g_bcg_ds.d_rep, g_bcg_ds.numVert * sizeof(int), cudaMemcpyDeviceToHost), "Unable to copy back rep array");
-    std::set<int> num_comp(host_rep.begin(), host_rep.end());
+    // The deliverable is the supernode mapping M. Count the distinct
+    // supernodes original vertices land in.
+    std::vector<int> host_map(original_num_verts);
+    CUDA_CHECK(cudaMemcpy(host_map.data(), g_bcg_ds.d_mapping,
+                          original_num_verts * sizeof(int), cudaMemcpyDeviceToHost),
+               "Unable to copy back mapping array");
 
-    int root_freq = 0;
-    int root = g_bcg_ds.last_root;
-    size_t final_count = num_comp.size();
-    CUDA_CHECK(cudaMemcpy(&root_freq, g_bcg_ds.d_counter + root, sizeof(int), cudaMemcpyDeviceToHost), "Failed to copy");
-    
-    return (root_freq == 1) ? final_count - 1 : final_count;
+    std::set<int> supernodes(host_map.begin(), host_map.end());
+
+    // ---- the biconnected-component count ----------------------------------
+    // With the stream exhausted, the active edge set IS the block-cut forest,
+    // so every biconnected component is either
+    //
+    //   a block   -- a node pair with ids >= n, counted by its primary half, or
+    //   a bridge  -- an active edge, deliberately left uncompressed.
+    //
+    // A block owns an aligned PAIR of ids, so only the primary (even offset
+    // from n) is counted; the second half is the same component.
+    //
+    // Both sources are needed for the block set: a block that absorbed nobody
+    // (all its members are cut vertices) shows up only in the edge list, and a
+    // block that is a whole connected component has no incident edge at all and
+    // shows up only in M.
+    // Under dense ids the readout is simpler and needs no scan of M: a block
+    // owns an aligned pair in [0, 2*n_b) and everything that kept its own
+    // identity owns an id above that, so a bridge is exactly an edge with both
+    // endpoints >= 2*n_b -- every other edge is a block's own pair edge or an
+    // attachment to one.
+    if (g_gpu_bcc) {
+        const int two_nb = g_bcg_ds.n_b;
+        long dense_bridges = 0;
+        std::vector<uint64_t> fin(g_bcg_ds.numEdges);
+        if (g_bcg_ds.numEdges > 0) {
+            CUDA_CHECK(cudaMemcpy(fin.data(), g_bcg_ds.updated_edgelist,
+                                  g_bcg_ds.numEdges * sizeof(uint64_t), cudaMemcpyDeviceToHost),
+                       "Unable to copy back the final edge list");
+            for (uint64_t e : fin) {
+                int u = (int)(e >> 32), v = (int)(e & 0xFFFFFFFF);
+                if (u >= two_nb && v >= two_nb) ++dense_bridges;
+            }
+        }
+        const long dense_total = g_bcg_ds.n_b + dense_bridges;
+
+        // LCH readout -- the output format of the paper's Algorithm 1:
+        //     BCC(j) = { v : label[v] = j }  u  { componentHead[j] }
+        // One host pass over the finished block-cut graph; M and the edge set
+        // are already here for the count, so this moves no extra data.
+        std::vector<int> label, head;
+        const int n_comp = compute_lch(host_map, original_num_verts, fin,
+                                       g_bcg_ds.n_s, g_bcg_ds.n_b, label, head);
+        long labelled = 0, heads = 0;
+        for (int v = 0; v < original_num_verts; ++v) if (label[v] >= 0) ++labelled;
+        for (int j = 0; j < n_comp; ++j)             if (head[j]  >= 0) ++heads;
+        // How many BCCs does a single vertex head? A cut vertex in k bccs heads
+        // k-1 of them, so this is the cut-vertex multiplicity distribution.
+        std::vector<int> headmult(original_num_verts, 0);
+        for (int j = 0; j < n_comp; ++j)
+            if (head[j] >= 0 && head[j] < original_num_verts) ++headmult[head[j]];
+        long distinct_heads = 0, max_mult = 0; int argmax = -1;
+        std::vector<long> hist(8, 0);
+        for (int v = 0; v < original_num_verts; ++v) {
+            int k = headmult[v];
+            if (k > 0) ++distinct_heads;
+            if (k > max_mult) { max_mult = k; argmax = v; }
+            if (k > 0) ++hist[std::min<long>(k, 7)];
+        }
+
+        std::cout << "\n========================================\n"
+                  << "       Biconnected components\n"
+                  << "========================================\n\n"
+                  << "Biconnected components:   " << dense_total        << "\n"
+                  << "  of which bridges:       " << dense_bridges      << "\n"
+                  << "  2-connected blocks:     " << g_bcg_ds.n_b       << "\n"
+                  << "Supernodes in M:          " << supernodes.size()  << "\n"
+                  << "BCG nodes (n_s):          " << g_bcg_ds.n_s       << "\n"
+                  << "----------------------------------------\n"
+                  << "LCH output\n"
+                  << "  components (labels):    " << n_comp             << "\n"
+                  << "  vertices labelled:      " << labelled           << "\n"
+                  << "  components with a head: " << heads << "\n"
+                  << "  distinct head vertices:  " << distinct_heads << "\n"
+                  << "  max BCCs headed by one v: " << max_mult
+                  << "  (vertex " << argmax << ")\n"
+                  << "  heads of 1/2/3/4/5/6/7+ : " << hist[1] << " " << hist[2]
+                  << " " << hist[3] << " " << hist[4] << " " << hist[5]
+                  << " " << hist[6] << " " << hist[7]              << "\n"
+                  << "========================================\n";
+        return (int)dense_total;
+    }
+
+    auto is_primary = [&](int id) {
+        return id >= original_num_verts && ((id - original_num_verts) % 2 == 0);
+    };
+
+    std::set<int> blocks;
+    for (int s : host_map) if (is_primary(s)) blocks.insert(s);
+
+    long bridges = 0;
+    if (g_bcg_ds.numEdges > 0) {
+        std::vector<uint64_t> final_edges(g_bcg_ds.numEdges);
+        CUDA_CHECK(cudaMemcpy(final_edges.data(), g_bcg_ds.updated_edgelist,
+                              g_bcg_ds.numEdges * sizeof(uint64_t), cudaMemcpyDeviceToHost),
+                   "Unable to copy back the final edge list");
+        for (uint64_t e : final_edges) {
+            int u = (int)(e >> 32), v = (int)(e & 0xFFFFFFFF);
+            if (is_primary(u)) blocks.insert(u);
+            if (is_primary(v)) blocks.insert(v);
+        }
+        bridges = bcg_bridge_count(final_edges.data(), (long)final_edges.size(),
+                                   original_num_verts, g_bcg_ds.V_max);
+    }
+
+    std::cout << "\n========================================\n"
+              << "       Biconnected components\n"
+              << "========================================\n\n"
+              << "Biconnected components:   " << (blocks.size() + bridges) << "\n"
+              << "  of which bridges:       " << bridges       << "\n"
+              << "  2-connected blocks:     " << blocks.size() << "\n"
+              << "Supernodes in M:          " << supernodes.size() << "\n"
+              << "========================================\n";
+
+    return (int)(blocks.size() + bridges);
 }
 

@@ -1,0 +1,399 @@
+=== full experiment  reps=3  bs={500000 2000000}  tmo=1800s  csv=experiments/results/full.csv
+=== started 2026-11-15 11:47:41
+  as-Skitter             bs=500000    default   rep1  ok          107 ms       0.8 s  bcc=239476
+  as-Skitter             bs=500000    default   rep2  ok           84 ms       0.7 s  bcc=239476
+  as-Skitter             bs=500000    default   rep3  ok           82 ms       0.6 s  bcc=239476
+  as-Skitter             bs=500000    0         rep1  ok           87 ms       0.7 s  bcc=239476
+  as-Skitter             bs=500000    0         rep2  ok           87 ms       0.6 s  bcc=239476
+  as-Skitter             bs=500000    0         rep3  ok           87 ms       0.7 s  bcc=239476
+  as-Skitter             bs=2000000   default   rep1  ok           33 ms       0.6 s  bcc=239476
+  as-Skitter             bs=2000000   default   rep2  ok           33 ms       0.6 s  bcc=239476
+  as-Skitter             bs=2000000   default   rep3  ok           33 ms       0.6 s  bcc=239476
+  as-Skitter             bs=2000000   0         rep1  ok           36 ms       0.6 s  bcc=239476
+  as-Skitter             bs=2000000   0         rep2  ok           36 ms       0.6 s  bcc=239476
+  as-Skitter             bs=2000000   0         rep3  ok           36 ms       0.6 s  bcc=239476
+  coPapersCiteseer       bs=500000    default   rep1  ok           66 ms       0.5 s  bcc=11577
+  coPapersCiteseer       bs=500000    default   rep2  ok           67 ms       0.4 s  bcc=11577
+  coPapersCiteseer       bs=500000    default   rep3  ok           66 ms       0.4 s  bcc=11577
+  coPapersCiteseer       bs=500000    0         rep1  ok           70 ms       0.5 s  bcc=11577
+  coPapersCiteseer       bs=500000    0         rep2  ok           69 ms       0.5 s  bcc=11577
+  coPapersCiteseer       bs=500000    0         rep3  ok           70 ms       0.5 s  bcc=11577
+  coPapersCiteseer       bs=2000000   default   rep1  ok           34 ms       0.5 s  bcc=11577
+  coPapersCiteseer       bs=2000000   default   rep2  ok           29 ms       0.4 s  bcc=11577
+  coPapersCiteseer       bs=2000000   default   rep3  ok           29 ms       0.5 s  bcc=11577
+  coPapersCiteseer       bs=2000000   0         rep1  ok           32 ms       0.4 s  bcc=11577
+  coPapersCiteseer       bs=2000000   0         rep2  ok           32 ms       0.4 s  bcc=11577
+  coPapersCiteseer       bs=2000000   0         rep3  ok           32 ms       0.4 s  bcc=11577
+  coPapersDBLP           bs=500000    default   rep1  ok           68 ms       0.4 s  bcc=17066
+  coPapersDBLP           bs=500000    default   rep2  ok           68 ms       0.4 s  bcc=17066
+  coPapersDBLP           bs=500000    default   rep3  ok           69 ms       0.4 s  bcc=17066
+  coPapersDBLP           bs=500000    0         rep1  ok           71 ms       0.5 s  bcc=17066
+  coPapersDBLP           bs=500000    0         rep2  ok           70 ms       0.5 s  bcc=17066
+  coPapersDBLP           bs=500000    0         rep3  ok           73 ms       0.5 s  bcc=17066
+  coPapersDBLP           bs=2000000   default   rep1  ok           25 ms       0.5 s  bcc=17066
+  coPapersDBLP           bs=2000000   default   rep2  ok           25 ms       0.4 s  bcc=17066
+  coPapersDBLP           bs=2000000   default   rep3  ok           28 ms       0.5 s  bcc=17066
+  coPapersDBLP           bs=2000000   0         rep1  ok           32 ms       0.6 s  bcc=17066
+  coPapersDBLP           bs=2000000   0         rep2  ok           28 ms       0.6 s  bcc=17066
+  coPapersDBLP           bs=2000000   0         rep3  ok           27 ms       0.4 s  bcc=17066
+  delaunay_n24           bs=500000    default   rep1  ok         2696 ms       4.0 s  bcc=1
+  delaunay_n24           bs=500000    default   rep2  ok         2701 ms       4.0 s  bcc=1
+  delaunay_n24           bs=500000    default   rep3  ok         2691 ms       4.0 s  bcc=1
+  delaunay_n24           bs=500000    0         rep1  ok         2889 ms       4.2 s  bcc=1
+  delaunay_n24           bs=500000    0         rep2  ok         2894 ms       4.4 s  bcc=1
+  delaunay_n24           bs=500000    0         rep3  ok         2899 ms       4.2 s  bcc=1
+  delaunay_n24           bs=2000000   default   rep1  ok          803 ms       2.1 s  bcc=1
+  delaunay_n24           bs=2000000   default   rep2  ok          806 ms       2.2 s  bcc=1
+  delaunay_n24           bs=2000000   default   rep3  ok          835 ms       2.4 s  bcc=1
+  delaunay_n24           bs=2000000   0         rep1  ok          888 ms       2.2 s  bcc=1
+  delaunay_n24           bs=2000000   0         rep2  ok          885 ms       2.2 s  bcc=1
+  delaunay_n24           bs=2000000   0         rep3  ok          889 ms       2.2 s  bcc=1
+  eu-2005                bs=500000    default   rep1  ok           93 ms       0.5 s  bcc=53013
+  eu-2005                bs=500000    default   rep2  ok           93 ms       0.5 s  bcc=53013
+  eu-2005                bs=500000    default   rep3  ok           90 ms       0.5 s  bcc=53013
+  eu-2005                bs=500000    0         rep1  ok           98 ms       0.5 s  bcc=53013
+  eu-2005                bs=500000    0         rep2  ok           98 ms       0.5 s  bcc=53013
+  eu-2005                bs=500000    0         rep3  ok           98 ms       0.5 s  bcc=53013
+  eu-2005                bs=2000000   default   rep1  ok           38 ms       0.5 s  bcc=53013
+  eu-2005                bs=2000000   default   rep2  ok           38 ms       0.5 s  bcc=53013
+  eu-2005                bs=2000000   default   rep3  ok           38 ms       0.5 s  bcc=53013
+  eu-2005                bs=2000000   0         rep1  ok           45 ms       0.5 s  bcc=53013
+  eu-2005                bs=2000000   0         rep2  ok           45 ms       0.5 s  bcc=53013
+  eu-2005                bs=2000000   0         rep3  ok           46 ms       0.5 s  bcc=53013
+  europe_osm             bs=500000    default   rep1  ok         7400 ms      20.1 s  bcc=11502742
+  europe_osm             bs=500000    default   rep2  ok         7368 ms      19.9 s  bcc=11502742
+  europe_osm             bs=500000    default   rep3  ok         7373 ms      20.1 s  bcc=11502742
+  europe_osm             bs=500000    0         rep1  ok         7826 ms      21.0 s  bcc=11502742
+  europe_osm             bs=500000    0         rep2  ok         7894 ms      20.5 s  bcc=11502742
+  europe_osm             bs=500000    0         rep3  ok         7823 ms      20.4 s  bcc=11502742
+  europe_osm             bs=2000000   default   rep1  ok         2109 ms      14.9 s  bcc=11502742
+  europe_osm             bs=2000000   default   rep2  ok         2109 ms      14.7 s  bcc=11502742
+  europe_osm             bs=2000000   default   rep3  ok         2088 ms      14.7 s  bcc=11502742
+  europe_osm             bs=2000000   0         rep1  ok         2215 ms      15.1 s  bcc=11502742
+  europe_osm             bs=2000000   0         rep2  ok         2213 ms      14.7 s  bcc=11502742
+  europe_osm             bs=2000000   0         rep3  ok         2237 ms      15.5 s  bcc=11502742
+  GAP-road               bs=500000    default   rep1  ok         2422 ms      10.5 s  bcc=7390330
+  GAP-road               bs=500000    default   rep2  ok         2424 ms      11.0 s  bcc=7390330
+  GAP-road               bs=500000    default   rep3  ok         2429 ms      10.5 s  bcc=7390330
+  GAP-road               bs=500000    0         rep1  ok         2621 ms      10.8 s  bcc=7390330
+  GAP-road               bs=500000    0         rep2  ok         2619 ms      10.8 s  bcc=7390330
+  GAP-road               bs=500000    0         rep3  ok         2622 ms      11.0 s  bcc=7390330
+  GAP-road               bs=2000000   default   rep1  ok          727 ms       8.8 s  bcc=7390330
+  GAP-road               bs=2000000   default   rep2  ok          718 ms       8.9 s  bcc=7390330
+  GAP-road               bs=2000000   default   rep3  ok          726 ms       8.8 s  bcc=7390330
+  GAP-road               bs=2000000   0         rep1  ok          778 ms       9.0 s  bcc=7390330
+  GAP-road               bs=2000000   0         rep2  ok          777 ms       8.6 s  bcc=7390330
+  GAP-road               bs=2000000   0         rep3  ok          781 ms       8.9 s  bcc=7390330
+  germany_osm            bs=500000    default   rep1  ok          402 ms       3.2 s  bcc=2524313
+  germany_osm            bs=500000    default   rep2  ok          401 ms       3.1 s  bcc=2524313
+  germany_osm            bs=500000    default   rep3  ok          404 ms       3.2 s  bcc=2524313
+  germany_osm            bs=500000    0         rep1  ok          423 ms       3.1 s  bcc=2524313
+  germany_osm            bs=500000    0         rep2  ok          424 ms       3.3 s  bcc=2524313
+  germany_osm            bs=500000    0         rep3  ok          424 ms       3.1 s  bcc=2524313
+  germany_osm            bs=2000000   default   rep1  ok          156 ms       2.8 s  bcc=2524313
+  germany_osm            bs=2000000   default   rep2  ok          156 ms       3.1 s  bcc=2524313
+  germany_osm            bs=2000000   default   rep3  ok          156 ms       2.9 s  bcc=2524313
+  germany_osm            bs=2000000   0         rep1  ok          164 ms       3.0 s  bcc=2524313
+  germany_osm            bs=2000000   0         rep2  ok          164 ms       2.9 s  bcc=2524313
+  germany_osm            bs=2000000   0         rep3  ok          164 ms       3.0 s  bcc=2524313
+  higgs-twitter          bs=500000    default   rep1  ok           56 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=500000    default   rep2  ok           56 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=500000    default   rep3  ok           56 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=500000    0         rep1  ok           71 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=500000    0         rep2  ok           62 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=500000    0         rep3  ok           58 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=2000000   default   rep1  ok           23 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=2000000   default   rep2  ok           23 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=2000000   default   rep3  ok           23 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=2000000   0         rep1  ok           24 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=2000000   0         rep2  ok           24 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=2000000   0         rep3  ok           24 ms       0.4 s  bcc=24910
+  hollywood-2009         bs=500000    default   rep1  ok          281 ms       1.3 s  bcc=78287
+  hollywood-2009         bs=500000    default   rep2  ok          277 ms       1.2 s  bcc=78287
+  hollywood-2009         bs=500000    default   rep3  ok          275 ms       1.2 s  bcc=78287
+  hollywood-2009         bs=500000    0         rep1  ok          290 ms       1.1 s  bcc=78287
+  hollywood-2009         bs=500000    0         rep2  ok          290 ms       1.2 s  bcc=78287
+  hollywood-2009         bs=500000    0         rep3  ok          290 ms       1.1 s  bcc=78287
+  hollywood-2009         bs=2000000   default   rep1  ok           99 ms       1.0 s  bcc=78287
+  hollywood-2009         bs=2000000   default   rep2  ok           99 ms       1.0 s  bcc=78287
+  hollywood-2009         bs=2000000   default   rep3  ok           99 ms       1.0 s  bcc=78287
+  hollywood-2009         bs=2000000   0         rep1  ok          112 ms       1.0 s  bcc=78287
+  hollywood-2009         bs=2000000   0         rep2  ok          112 ms       1.0 s  bcc=78287
+  hollywood-2009         bs=2000000   0         rep3  ok          110 ms       1.0 s  bcc=78287
+  hugebubbles-00020      bs=500000    default   rep1  ok         2388 ms       3.5 s  bcc=1
+  hugebubbles-00020      bs=500000    default   rep2  ok         2407 ms       3.5 s  bcc=1
+  hugebubbles-00020      bs=500000    default   rep3  ok         2390 ms       3.4 s  bcc=1
+  hugebubbles-00020      bs=500000    0         rep1  ok         2537 ms       3.6 s  bcc=1
+  hugebubbles-00020      bs=500000    0         rep2  ok         2533 ms       3.6 s  bcc=1
+  hugebubbles-00020      bs=500000    0         rep3  ok         2543 ms       3.6 s  bcc=1
+  hugebubbles-00020      bs=2000000   default   rep1  ok          719 ms       1.8 s  bcc=1
+  hugebubbles-00020      bs=2000000   default   rep2  ok          716 ms       1.8 s  bcc=1
+  hugebubbles-00020      bs=2000000   default   rep3  ok          714 ms       1.8 s  bcc=1
+  hugebubbles-00020      bs=2000000   0         rep1  ok          772 ms       1.9 s  bcc=1
+  hugebubbles-00020      bs=2000000   0         rep2  ok          758 ms       1.9 s  bcc=1
+  hugebubbles-00020      bs=2000000   0         rep3  ok          763 ms       1.8 s  bcc=1
+  in-2004                bs=500000    default   rep1  ok           90 ms       0.7 s  bcc=299221
+  in-2004                bs=500000    default   rep2  ok           90 ms       0.6 s  bcc=299221
+  in-2004                bs=500000    default   rep3  ok           90 ms       0.7 s  bcc=299221
+  in-2004                bs=500000    0         rep1  ok           97 ms       0.6 s  bcc=299221
+  in-2004                bs=500000    0         rep2  ok           97 ms       0.6 s  bcc=299221
+  in-2004                bs=500000    0         rep3  ok           99 ms       0.7 s  bcc=299221
+  in-2004                bs=2000000   default   rep1  ok           36 ms       0.6 s  bcc=299221
+  in-2004                bs=2000000   default   rep2  ok           35 ms       0.6 s  bcc=299221
+  in-2004                bs=2000000   default   rep3  ok           36 ms       0.6 s  bcc=299221
+  in-2004                bs=2000000   0         rep1  ok           41 ms       0.6 s  bcc=299221
+  in-2004                bs=2000000   0         rep2  ok           42 ms       0.6 s  bcc=299221
+  in-2004                bs=2000000   0         rep3  ok           41 ms       0.6 s  bcc=299221
+  indochina-2004         bs=500000    default   rep1  ok         2245 ms       5.2 s  bcc=1320484
+  indochina-2004         bs=500000    default   rep2  ok         2327 ms       5.2 s  bcc=1320484
+  indochina-2004         bs=500000    default   rep3  ok         2242 ms       5.2 s  bcc=1320484
+  indochina-2004         bs=500000    0         rep1  ok         2370 ms       5.3 s  bcc=1320484
+  indochina-2004         bs=500000    0         rep2  ok         2371 ms       5.3 s  bcc=1320484
+  indochina-2004         bs=500000    0         rep3  ok         2370 ms       5.3 s  bcc=1320484
+  indochina-2004         bs=2000000   default   rep1  ok          703 ms       3.7 s  bcc=1320484
+  indochina-2004         bs=2000000   default   rep2  ok          703 ms       3.7 s  bcc=1320484
+  indochina-2004         bs=2000000   default   rep3  ok          702 ms       3.6 s  bcc=1320484
+  indochina-2004         bs=2000000   0         rep1  ok          782 ms       3.7 s  bcc=1320484
+  indochina-2004         bs=2000000   0         rep2  ok          783 ms       3.8 s  bcc=1320484
+  indochina-2004         bs=2000000   0         rep3  ok          784 ms       3.7 s  bcc=1320484
+  kmer_U1a               bs=500000    default   rep1  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_U1a               bs=500000    default   rep1  oom             ms       1.6 s  bcc=?
+  kmer_U1a               bs=500000    default   rep2  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_U1a               bs=500000    default   rep2  oom             ms       1.6 s  bcc=?
+  kmer_U1a               bs=500000    default   rep3  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_U1a               bs=500000    default   rep3  oom             ms       1.5 s  bcc=?
+  kmer_U1a               bs=500000    0         rep1  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_U1a               bs=500000    0         rep1  oom             ms       1.6 s  bcc=?
+  kmer_U1a               bs=500000    0         rep2  oom             ms       1.6 s  bcc=?
+     retry once
+  kmer_U1a               bs=500000    0         rep2  oom             ms       1.5 s  bcc=?
+  kmer_U1a               bs=500000    0         rep3  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_U1a               bs=500000    0         rep3  oom             ms       1.5 s  bcc=?
+  kmer_U1a               bs=2000000   default   rep1  oom             ms       1.6 s  bcc=?
+     retry once
+  kmer_U1a               bs=2000000   default   rep1  oom             ms       1.5 s  bcc=?
+  kmer_U1a               bs=2000000   default   rep2  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_U1a               bs=2000000   default   rep2  oom             ms       1.6 s  bcc=?
+  kmer_U1a               bs=2000000   default   rep3  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_U1a               bs=2000000   default   rep3  oom             ms       1.5 s  bcc=?
+  kmer_U1a               bs=2000000   0         rep1  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_U1a               bs=2000000   0         rep1  oom             ms       1.5 s  bcc=?
+  kmer_U1a               bs=2000000   0         rep2  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_U1a               bs=2000000   0         rep2  oom             ms       1.6 s  bcc=?
+  kmer_U1a               bs=2000000   0         rep3  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_U1a               bs=2000000   0         rep3  oom             ms       1.5 s  bcc=?
+  kmer_V2a               bs=500000    default   rep1  oom             ms       2.3 s  bcc=?
+     retry once
+  kmer_V2a               bs=500000    default   rep1  oom             ms       2.3 s  bcc=?
+  kmer_V2a               bs=500000    default   rep2  oom             ms       2.3 s  bcc=?
+     retry once
+  kmer_V2a               bs=500000    default   rep2  oom             ms       2.4 s  bcc=?
+  kmer_V2a               bs=500000    default   rep3  oom             ms       2.3 s  bcc=?
+     retry once
+  kmer_V2a               bs=500000    default   rep3  oom             ms       2.3 s  bcc=?
+  kmer_V2a               bs=500000    0         rep1  oom             ms       2.8 s  bcc=?
+     retry once
+  kmer_V2a               bs=500000    0         rep1  oom             ms       2.4 s  bcc=?
+  kmer_V2a               bs=500000    0         rep2  oom             ms       2.3 s  bcc=?
+     retry once
+  kmer_V2a               bs=500000    0         rep2  oom             ms       2.4 s  bcc=?
+  kmer_V2a               bs=500000    0         rep3  oom             ms       2.6 s  bcc=?
+     retry once
+  kmer_V2a               bs=500000    0         rep3  oom             ms       2.4 s  bcc=?
+  kmer_V2a               bs=2000000   default   rep1  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_V2a               bs=2000000   default   rep1  oom             ms       1.3 s  bcc=?
+  kmer_V2a               bs=2000000   default   rep2  oom             ms       1.4 s  bcc=?
+     retry once
+  kmer_V2a               bs=2000000   default   rep2  oom             ms       1.3 s  bcc=?
+  kmer_V2a               bs=2000000   default   rep3  oom             ms       1.4 s  bcc=?
+     retry once
+  kmer_V2a               bs=2000000   default   rep3  oom             ms       1.3 s  bcc=?
+  kmer_V2a               bs=2000000   0         rep1  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_V2a               bs=2000000   0         rep1  oom             ms       1.4 s  bcc=?
+  kmer_V2a               bs=2000000   0         rep2  oom             ms       1.4 s  bcc=?
+     retry once
+  kmer_V2a               bs=2000000   0         rep2  oom             ms       1.4 s  bcc=?
+  kmer_V2a               bs=2000000   0         rep3  oom             ms       1.5 s  bcc=?
+     retry once
+  kmer_V2a               bs=2000000   0         rep3  oom             ms       1.4 s  bcc=?
+  kron_g500-logn18       bs=500000    default   rep1  ok          308 ms       0.9 s  bcc=79315
+  kron_g500-logn18       bs=500000    default   rep2  ok           68 ms       0.5 s  bcc=79315
+  kron_g500-logn18       bs=500000    default   rep3  ok           68 ms       0.5 s  bcc=79315
+  kron_g500-logn18       bs=500000    0         rep1  ok           64 ms       0.5 s  bcc=79315
+  kron_g500-logn18       bs=500000    0         rep2  ok           74 ms       0.5 s  bcc=79315
+  kron_g500-logn18       bs=500000    0         rep3  ok           74 ms       0.5 s  bcc=79315
+  kron_g500-logn18       bs=2000000   default   rep1  ok           41 ms       0.4 s  bcc=79315
+  kron_g500-logn18       bs=2000000   default   rep2  ok           29 ms       0.4 s  bcc=79315
+  kron_g500-logn18       bs=2000000   default   rep3  ok           33 ms       0.4 s  bcc=79315
+  kron_g500-logn18       bs=2000000   0         rep1  ok           39 ms       0.5 s  bcc=79315
+  kron_g500-logn18       bs=2000000   0         rep2  ok           35 ms       0.4 s  bcc=79315
+  kron_g500-logn18       bs=2000000   0         rep3  ok           40 ms       0.5 s  bcc=79315
+  kron_g500-logn19       bs=500000    default   rep1  ok          287 ms       0.8 s  bcc=172125
+  kron_g500-logn19       bs=500000    default   rep2  ok          309 ms       1.0 s  bcc=172125
+  kron_g500-logn19       bs=500000    default   rep3  ok          297 ms       0.9 s  bcc=172125
+  kron_g500-logn19       bs=500000    0         rep1  ok          302 ms       0.8 s  bcc=172125
+  kron_g500-logn19       bs=500000    0         rep2  ok          276 ms       0.9 s  bcc=172125
+  kron_g500-logn19       bs=500000    0         rep3  ok          287 ms       0.8 s  bcc=172125
+  kron_g500-logn19       bs=2000000   default   rep1  ok           96 ms       0.7 s  bcc=172125
+  kron_g500-logn19       bs=2000000   default   rep2  ok          106 ms       0.7 s  bcc=172125
+  kron_g500-logn19       bs=2000000   default   rep3  ok           88 ms       0.6 s  bcc=172125
+  kron_g500-logn19       bs=2000000   0         rep1  ok          106 ms       0.8 s  bcc=172125
+  kron_g500-logn19       bs=2000000   0         rep2  ok          109 ms       0.6 s  bcc=172125
+  kron_g500-logn19       bs=2000000   0         rep3  ok          103 ms       0.6 s  bcc=172125
+  kron_g500-logn20       bs=500000    default   rep1  ok          879 ms       1.8 s  bcc=370045
+  kron_g500-logn20       bs=500000    default   rep2  ok          866 ms       1.8 s  bcc=370045
+  kron_g500-logn20       bs=500000    default   rep3  ok          836 ms       1.8 s  bcc=370045
+  kron_g500-logn20       bs=500000    0         rep1  ok          863 ms       1.8 s  bcc=370045
+  kron_g500-logn20       bs=500000    0         rep2  ok          893 ms       1.8 s  bcc=370045
+  kron_g500-logn20       bs=500000    0         rep3  ok          908 ms       1.9 s  bcc=370045
+  kron_g500-logn20       bs=2000000   default   rep1  ok          185 ms       1.1 s  bcc=370045
+  kron_g500-logn20       bs=2000000   default   rep2  ok          220 ms       1.2 s  bcc=370045
+  kron_g500-logn20       bs=2000000   default   rep3  ok          226 ms       1.2 s  bcc=370045
+  kron_g500-logn20       bs=2000000   0         rep1  ok          229 ms       1.2 s  bcc=370045
+  kron_g500-logn20       bs=2000000   0         rep2  ok          234 ms       1.2 s  bcc=370045
+  kron_g500-logn20       bs=2000000   0         rep3  ok          189 ms       1.1 s  bcc=370045
+  kron_g500-logn21       bs=500000    default   rep1  ok         2236 ms       4.0 s  bcc=791762
+  kron_g500-logn21       bs=500000    default   rep2  ok         2173 ms       3.9 s  bcc=791762
+  kron_g500-logn21       bs=500000    default   rep3  ok         2240 ms       4.0 s  bcc=791762
+  kron_g500-logn21       bs=500000    0         rep1  ok         2334 ms       4.1 s  bcc=791762
+  kron_g500-logn21       bs=500000    0         rep2  ok         2298 ms       4.0 s  bcc=791762
+  kron_g500-logn21       bs=500000    0         rep3  ok         2444 ms       4.2 s  bcc=791762
+  kron_g500-logn21       bs=2000000   default   rep1  ok          601 ms       2.4 s  bcc=791762
+  kron_g500-logn21       bs=2000000   default   rep2  ok          619 ms       2.4 s  bcc=791762
+  kron_g500-logn21       bs=2000000   default   rep3  ok          628 ms       2.4 s  bcc=791762
+  kron_g500-logn21       bs=2000000   0         rep1  ok          697 ms       2.5 s  bcc=791762
+  kron_g500-logn21       bs=2000000   0         rep2  ok          759 ms       2.5 s  bcc=791762
+  kron_g500-logn21       bs=2000000   0         rep3  ok          676 ms       2.4 s  bcc=791762
+  ljournal-2008          bs=500000    default   rep1  ok          901 ms       2.8 s  bcc=1332725
+  ljournal-2008          bs=500000    default   rep2  ok          901 ms       2.8 s  bcc=1332725
+  ljournal-2008          bs=500000    default   rep3  ok          901 ms       2.8 s  bcc=1332725
+  ljournal-2008          bs=500000    0         rep1  ok          964 ms       3.0 s  bcc=1332725
+  ljournal-2008          bs=500000    0         rep2  ok          971 ms       3.0 s  bcc=1332725
+  ljournal-2008          bs=500000    0         rep3  ok          964 ms       2.9 s  bcc=1332725
+  ljournal-2008          bs=2000000   default   rep1  ok          281 ms       2.3 s  bcc=1332725
+  ljournal-2008          bs=2000000   default   rep2  ok          282 ms       2.3 s  bcc=1332725
+  ljournal-2008          bs=2000000   default   rep3  ok          281 ms       2.2 s  bcc=1332725
+  ljournal-2008          bs=2000000   0         rep1  ok          312 ms       2.3 s  bcc=1332725
+  ljournal-2008          bs=2000000   0         rep2  ok          312 ms       2.3 s  bcc=1332725
+  ljournal-2008          bs=2000000   0         rep3  ok          312 ms       2.3 s  bcc=1332725
+  rgg_n_2_23_s0          bs=500000    default   rep1  ok          585 ms       1.9 s  bcc=61
+  rgg_n_2_23_s0          bs=500000    default   rep2  ok          575 ms       1.8 s  bcc=61
+  rgg_n_2_23_s0          bs=500000    default   rep3  ok          575 ms       1.8 s  bcc=61
+  rgg_n_2_23_s0          bs=500000    0         rep1  ok          645 ms       2.0 s  bcc=61
+  rgg_n_2_23_s0          bs=500000    0         rep2  ok          640 ms       1.9 s  bcc=61
+  rgg_n_2_23_s0          bs=500000    0         rep3  ok          642 ms       1.9 s  bcc=61
+  rgg_n_2_23_s0          bs=2000000   default   rep1  ok          243 ms       1.4 s  bcc=61
+  rgg_n_2_23_s0          bs=2000000   default   rep2  ok          243 ms       1.4 s  bcc=61
+  rgg_n_2_23_s0          bs=2000000   default   rep3  ok          243 ms       1.5 s  bcc=61
+  rgg_n_2_23_s0          bs=2000000   0         rep1  ok          284 ms       1.5 s  bcc=61
+  rgg_n_2_23_s0          bs=2000000   0         rep2  ok          284 ms       1.5 s  bcc=61
+  rgg_n_2_23_s0          bs=2000000   0         rep3  ok          284 ms       1.5 s  bcc=61
+  rgg_n_2_24_s0          bs=500000    default   rep1  ok         2071 ms       4.3 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    default   rep2  ok         2073 ms       4.4 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    default   rep3  ok         2075 ms       4.3 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    0         rep1  ok         2224 ms       4.5 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    0         rep2  ok         2225 ms       4.5 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    0         rep3  ok         2224 ms       4.4 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   default   rep1  ok          718 ms       3.0 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   default   rep2  ok          717 ms       2.9 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   default   rep3  ok          719 ms       3.0 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   0         rep1  ok          828 ms       3.1 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   0         rep2  ok          821 ms       3.1 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   0         rep3  ok          826 ms       3.1 s  bcc=70
+  road_usa               bs=500000    default   rep1  ok         2441 ms      10.5 s  bcc=7390330
+  road_usa               bs=500000    default   rep2  ok         2422 ms      10.6 s  bcc=7390330
+  road_usa               bs=500000    default   rep3  ok         2430 ms      10.5 s  bcc=7390330
+  road_usa               bs=500000    0         rep1  ok         2622 ms      11.1 s  bcc=7390330
+  road_usa               bs=500000    0         rep2  ok         2636 ms      10.6 s  bcc=7390330
+  road_usa               bs=500000    0         rep3  ok         2617 ms      11.0 s  bcc=7390330
+  road_usa               bs=2000000   default   rep1  ok          724 ms       9.0 s  bcc=7390330
+  road_usa               bs=2000000   default   rep2  ok          720 ms       9.1 s  bcc=7390330
+  road_usa               bs=2000000   default   rep3  ok          718 ms       8.9 s  bcc=7390330
+  road_usa               bs=2000000   0         rep1  ok          780 ms       8.5 s  bcc=7390330
+  road_usa               bs=2000000   0         rep2  ok          787 ms       8.9 s  bcc=7390330
+  road_usa               bs=2000000   0         rep3  ok          776 ms       9.0 s  bcc=7390330
+  soc-LiveJournal1       bs=500000    default   rep1  ok          665 ms       2.4 s  bcc=1135758
+  soc-LiveJournal1       bs=500000    default   rep2  ok          632 ms       2.4 s  bcc=1135758
+  soc-LiveJournal1       bs=500000    default   rep3  ok          632 ms       2.3 s  bcc=1135758
+  soc-LiveJournal1       bs=500000    0         rep1  ok          680 ms       2.5 s  bcc=1135758
+  soc-LiveJournal1       bs=500000    0         rep2  ok          665 ms       2.4 s  bcc=1135758
+  soc-LiveJournal1       bs=500000    0         rep3  ok          663 ms       2.4 s  bcc=1135758
+  soc-LiveJournal1       bs=2000000   default   rep1  ok          203 ms       1.9 s  bcc=1135758
+  soc-LiveJournal1       bs=2000000   default   rep2  ok          203 ms       1.9 s  bcc=1135758
+  soc-LiveJournal1       bs=2000000   default   rep3  ok          203 ms       1.9 s  bcc=1135758
+  soc-LiveJournal1       bs=2000000   0         rep1  ok          215 ms       1.9 s  bcc=1135758
+  soc-LiveJournal1       bs=2000000   0         rep2  ok          216 ms       2.0 s  bcc=1135758
+  soc-LiveJournal1       bs=2000000   0         rep3  ok          214 ms       2.0 s  bcc=1135758
+  sx-stackoverflow       bs=500000    default   rep1  ok          310 ms       1.4 s  bcc=649076
+  sx-stackoverflow       bs=500000    default   rep2  ok          314 ms       1.4 s  bcc=649076
+  sx-stackoverflow       bs=500000    default   rep3  ok          306 ms       1.4 s  bcc=649076
+  sx-stackoverflow       bs=500000    0         rep1  ok          319 ms       1.4 s  bcc=649076
+  sx-stackoverflow       bs=500000    0         rep2  ok          322 ms       1.4 s  bcc=649076
+  sx-stackoverflow       bs=500000    0         rep3  ok          320 ms       1.4 s  bcc=649076
+  sx-stackoverflow       bs=2000000   default   rep1  ok          106 ms       1.2 s  bcc=649076
+  sx-stackoverflow       bs=2000000   default   rep2  ok          107 ms       1.2 s  bcc=649076
+  sx-stackoverflow       bs=2000000   default   rep3  ok          107 ms       1.2 s  bcc=649076
+  sx-stackoverflow       bs=2000000   0         rep1  ok          116 ms       1.3 s  bcc=649076
+  sx-stackoverflow       bs=2000000   0         rep2  ok          115 ms       1.2 s  bcc=649076
+  sx-stackoverflow       bs=2000000   0         rep3  ok          114 ms       1.2 s  bcc=649076
+  uk-2002                bs=500000    default   rep1  ok         9455 ms      15.0 s  bcc=2583923
+  uk-2002                bs=500000    default   rep2  ok         9454 ms      15.0 s  bcc=2583923
+  uk-2002                bs=500000    default   rep3  ok         9453 ms      14.8 s  bcc=2583923
+  uk-2002                bs=500000    0         rep1  ok        10134 ms      15.6 s  bcc=2583923
+  uk-2002                bs=500000    0         rep2  ok        10112 ms      15.6 s  bcc=2583923
+  uk-2002                bs=500000    0         rep3  ok        10083 ms      15.6 s  bcc=2583923
+  uk-2002                bs=2000000   default   rep1  ok         2630 ms       8.3 s  bcc=2583923
+  uk-2002                bs=2000000   default   rep2  ok         2636 ms       8.2 s  bcc=2583923
+  uk-2002                bs=2000000   default   rep3  ok         2635 ms       8.2 s  bcc=2583923
+  uk-2002                bs=2000000   0         rep1  ok         2917 ms       8.5 s  bcc=2583923
+  uk-2002                bs=2000000   0         rep2  ok         2913 ms       8.5 s  bcc=2583923
+  uk-2002                bs=2000000   0         rep3  ok         2913 ms       8.4 s  bcc=2583923
+  web-BerkStan           bs=500000    default   rep1  ok           34 ms       0.4 s  bcc=62970
+  web-BerkStan           bs=500000    default   rep2  ok           34 ms       0.3 s  bcc=62970
+  web-BerkStan           bs=500000    default   rep3  ok           35 ms       0.4 s  bcc=62970
+  web-BerkStan           bs=500000    0         rep1  ok           37 ms       0.4 s  bcc=62970
+  web-BerkStan           bs=500000    0         rep2  ok           37 ms       0.4 s  bcc=62970
+  web-BerkStan           bs=500000    0         rep3  ok           37 ms       0.4 s  bcc=62970
+  web-BerkStan           bs=2000000   default   rep1  ok           17 ms       0.3 s  bcc=62970
+  web-BerkStan           bs=2000000   default   rep2  ok           17 ms       0.3 s  bcc=62970
+  web-BerkStan           bs=2000000   default   rep3  ok           19 ms       0.4 s  bcc=62970
+  web-BerkStan           bs=2000000   0         rep1  ok           19 ms       0.3 s  bcc=62970
+  web-BerkStan           bs=2000000   0         rep2  ok           19 ms       0.4 s  bcc=62970
+  web-BerkStan           bs=2000000   0         rep3  ok           19 ms       0.3 s  bcc=62970
+  wiki-topcats           bs=500000    default   rep1  ok          164 ms       0.8 s  bcc=6387
+  wiki-topcats           bs=500000    default   rep2  ok          161 ms       0.8 s  bcc=6387
+  wiki-topcats           bs=500000    default   rep3  ok          161 ms       0.7 s  bcc=6387
+  wiki-topcats           bs=500000    0         rep1  ok          175 ms       0.7 s  bcc=6387
+  wiki-topcats           bs=500000    0         rep2  ok          175 ms       0.8 s  bcc=6387
+  wiki-topcats           bs=500000    0         rep3  ok          175 ms       0.7 s  bcc=6387
+  wiki-topcats           bs=2000000   default   rep1  ok           63 ms       0.6 s  bcc=6387
+  wiki-topcats           bs=2000000   default   rep2  ok           64 ms       0.7 s  bcc=6387
+  wiki-topcats           bs=2000000   default   rep3  ok           63 ms       0.6 s  bcc=6387
+  wiki-topcats           bs=2000000   0         rep1  ok           71 ms       0.6 s  bcc=6387
+  wiki-topcats           bs=2000000   0         rep2  ok           72 ms       0.7 s  bcc=6387
+  wiki-topcats           bs=2000000   0         rep3  ok           72 ms       0.7 s  bcc=6387
+  com-Orkut              bs=500000    default   rep1  ok          842 ms       2.5 s  bcc=68117
+  com-Orkut              bs=500000    default   rep2  ok          859 ms       2.4 s  bcc=68117
+  com-Orkut              bs=500000    default   rep3  ok          846 ms       2.5 s  bcc=68117
+  com-Orkut              bs=500000    0         rep1  ok          860 ms       2.5 s  bcc=68117
+  com-Orkut              bs=500000    0         rep2  ok          874 ms       2.4 s  bcc=68117
+  com-Orkut              bs=500000    0         rep3  ok          872 ms       2.5 s  bcc=68117
+  com-Orkut              bs=2000000   default   rep1  ok          255 ms       1.9 s  bcc=68117
+  com-Orkut              bs=2000000   default   rep2  ok          259 ms       1.9 s  bcc=68117
+  com-Orkut              bs=2000000   default   rep3  ok          259 ms       1.8 s  bcc=68117
+  com-Orkut              bs=2000000   0         rep1  ok          272 ms       1.9 s  bcc=68117
+  com-Orkut              bs=2000000   0         rep2  ok          274 ms       1.9 s  bcc=68117
+  com-Orkut              bs=2000000   0         rep3  ok          272 ms       1.8 s  bcc=68117
+=== finished 2026-11-15 12:06:50

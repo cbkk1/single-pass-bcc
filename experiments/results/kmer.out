@@ -1,0 +1,253 @@
+###### ours kmer bs=8000000 2026-11-17 23:11:50
+=== full experiment  reps=3  bs={8000000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-17 23:11:50
+  kmer_U1a               bs=8000000   default   rep1  ok         3198 ms      32.0 s  bcc=21785336
+  kmer_U1a               bs=8000000   default   rep2  ok         3189 ms      32.3 s  bcc=21785336
+  kmer_U1a               bs=8000000   default   rep3  ok         3193 ms      35.2 s  bcc=21785336
+  kmer_U1a               bs=8000000   0         rep1  ok         3379 ms      37.6 s  bcc=21785336
+  kmer_U1a               bs=8000000   0         rep2  ok         3378 ms      34.1 s  bcc=21785336
+  kmer_U1a               bs=8000000   0         rep3  ok         3377 ms      36.4 s  bcc=21785336
+  kmer_V2a               bs=8000000   default   rep1  ok         2277 ms      15.8 s  bcc=9799080
+  kmer_V2a               bs=8000000   default   rep2  ok         2277 ms      17.9 s  bcc=9799080
+  kmer_V2a               bs=8000000   default   rep3  ok         2277 ms      20.3 s  bcc=9799080
+  kmer_V2a               bs=8000000   0         rep1  ok         2437 ms      17.0 s  bcc=9799080
+  kmer_V2a               bs=8000000   0         rep2  ok         2440 ms      16.3 s  bcc=9799080
+  kmer_V2a               bs=8000000   0         rep3  ok         2469 ms      15.7 s  bcc=9799080
+=== finished 2026-11-17 23:17:01
+###### two-pass kmer bs=8000000 2026-11-17 23:17:01
+=== two-pass baseline  reps=3  bs={8000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-17 23:17:01
+  kmer_U1a               bs=8000000   rep1  ok         6711 ms (st 50)     12.1 s  bcc=21785336
+     cell bound -> 97s (first good run 12.127037362s)
+  kmer_U1a               bs=8000000   rep2  ok         6710 ms (st 50)     12.9 s  bcc=21785336
+###### ours kmer bs=8000000 2026-11-17 23:18:01
+=== full experiment  reps=3  bs={8000000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-17 23:18:01
+=== finished 2026-11-17 23:18:01
+###### two-pass kmer bs=8000000 2026-11-17 23:18:01
+=== two-pass baseline  reps=3  bs={8000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-17 23:18:01
+  kmer_U1a               bs=8000000   rep3  ok         6708 ms (st 50)     12.9 s  bcc=21785336
+     cell bound -> 103s (first good run 12.896336218s)
+  kmer_V2a               bs=8000000   rep1  ok         4344 ms (st 40)      8.0 s  bcc=9799080
+     cell bound -> 63s (first good run 7.971179045s)
+  kmer_V2a               bs=8000000   rep2  ok         4341 ms (st 40)      7.7 s  bcc=9799080
+  kmer_V2a               bs=8000000   rep3  ok         4344 ms (st 40)      8.1 s  bcc=9799080
+=== finished 2026-11-17 23:18:38
+###### ours kmer bs=4000000 2026-11-17 23:18:38
+=== full experiment  reps=3  bs={4000000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-17 23:18:38
+  kmer_U1a               bs=4000000   default   rep1  ok         5673 ms      32.7 s  bcc=21785336
+  kmer_U1a               bs=4000000   default   rep2  ok         5677 ms      33.8 s  bcc=21785336
+  kmer_U1a               bs=4000000   default   rep3  ok         5678 ms      34.1 s  bcc=21785336
+  kmer_V2a               bs=4000000   default   rep1  ok         3711 ms      18.5 s  bcc=9799080
+  kmer_V2a               bs=4000000   default   rep2  ok         3708 ms      18.2 s  bcc=9799080
+  kmer_V2a               bs=4000000   default   rep3  ok         3718 ms      17.9 s  bcc=9799080
+=== finished 2026-11-17 23:21:14
+###### two-pass kmer bs=4000000 2026-11-17 23:21:14
+=== two-pass baseline  reps=3  bs={4000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-17 23:21:14
+  -- kmer_U1a bs=4000000 bound 120s (1/b law)
+  kmer_U1a               bs=4000000   rep1  ok        13143 ms (st 50)     18.3 s  bcc=21785336
+     cell bound -> 146s (first good run 18.310284599s)
+  kmer_U1a               bs=4000000   rep2  ok        13139 ms (st 50)     18.2 s  bcc=21785336
+  kmer_U1a               bs=4000000   rep3  ok        13132 ms (st 50)     18.2 s  bcc=21785336
+  -- kmer_V2a bs=4000000 bound 120s (1/b law)
+  kmer_V2a               bs=4000000   rep1  ok         8212 ms (st 40)     12.0 s  bcc=9799080
+     cell bound -> 96s (first good run 12.030794366s)
+  kmer_V2a               bs=4000000   rep2  ok         8215 ms (st 40)     11.5 s  bcc=9799080
+  kmer_V2a               bs=4000000   rep3  ok         8215 ms (st 40)     11.8 s  bcc=9799080
+=== finished 2026-11-17 23:22:44
+###### ours kmer bs=2000000 2026-11-17 23:22:44
+=== full experiment  reps=3  bs={2000000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-17 23:22:44
+  kmer_U1a               bs=2000000   default   rep1  ok        10251 ms      38.1 s  bcc=21785336
+  kmer_U1a               bs=2000000   default   rep2  ok        10270 ms      40.3 s  bcc=21785336
+  kmer_U1a               bs=2000000   default   rep3  ok        10260 ms      38.9 s  bcc=21785336
+  kmer_V2a               bs=2000000   default   rep1  ok         6787 ms      23.5 s  bcc=9799080
+  kmer_V2a               bs=2000000   default   rep2  ok         6798 ms      20.1 s  bcc=9799080
+  kmer_V2a               bs=2000000   default   rep3  ok         6802 ms      20.8 s  bcc=9799080
+=== finished 2026-11-17 23:25:46
+###### two-pass kmer bs=2000000 2026-11-17 23:25:46
+=== two-pass baseline  reps=3  bs={2000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-17 23:25:46
+  -- kmer_U1a bs=2000000 bound 214s (1/b law)
+  kmer_U1a               bs=2000000   rep1  ok        25663 ms (st 50)     30.6 s  bcc=21785336
+     cell bound -> 244s (first good run 30.564973263s)
+  kmer_U1a               bs=2000000   rep2  ok        25649 ms (st 50)     30.4 s  bcc=21785336
+  kmer_U1a               bs=2000000   rep3  ok        25659 ms (st 50)     30.9 s  bcc=21785336
+  -- kmer_V2a bs=2000000 bound 139s (1/b law)
+  kmer_V2a               bs=2000000   rep1  ok        16160 ms (st 40)     19.1 s  bcc=9799080
+     cell bound -> 152s (first good run 19.076100927s)
+  kmer_V2a               bs=2000000   rep2  ok        16153 ms (st 40)     19.0 s  bcc=9799080
+  kmer_V2a               bs=2000000   rep3  ok        16176 ms (st 40)     19.2 s  bcc=9799080
+=== finished 2026-11-17 23:28:16
+###### ours kmer bs=1000000 2026-11-17 23:28:16
+=== full experiment  reps=3  bs={1000000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-17 23:28:16
+  kmer_U1a               bs=1000000   default   rep1  ok        19691 ms      49.2 s  bcc=21785336
+  kmer_U1a               bs=1000000   default   rep2  ok        19745 ms      49.4 s  bcc=21785336
+  kmer_U1a               bs=1000000   default   rep3  ok        19762 ms      54.5 s  bcc=21785336
+  kmer_V2a               bs=1000000   default   rep1  ok        12848 ms      27.2 s  bcc=9799080
+  kmer_V2a               bs=1000000   default   rep2  ok        12772 ms      28.0 s  bcc=9799080
+  kmer_V2a               bs=1000000   default   rep3  ok        12820 ms      27.3 s  bcc=9799080
+=== finished 2026-11-17 23:32:12
+###### two-pass kmer bs=1000000 2026-11-17 23:32:12
+=== two-pass baseline  reps=3  bs={1000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-17 23:32:12
+  -- kmer_U1a bs=1000000 bound 429s (1/b law)
+  kmer_U1a               bs=1000000   rep1  ok        50990 ms (st 51)     55.3 s  bcc=21785336
+     cell bound -> 442s (first good run 55.259011318s)
+  kmer_U1a               bs=1000000   rep2  ok        50976 ms (st 51)     55.1 s  bcc=21785336
+  kmer_U1a               bs=1000000   rep3  fault           ms (st 51)      5.0 s  bcc=?
+     retry once
+  kmer_U1a               bs=1000000   rep3  ok        50965 ms (st 51)     55.2 s  bcc=21785336
+  -- kmer_V2a bs=1000000 bound 278s (1/b law)
+  kmer_V2a               bs=1000000   rep1  ok        31867 ms (st 41)     34.7 s  bcc=9799080
+     cell bound -> 277s (first good run 34.656233951s)
+  kmer_V2a               bs=1000000   rep2  ok        31871 ms (st 41)     34.7 s  bcc=9799080
+  kmer_V2a               bs=1000000   rep3  ok        31872 ms (st 41)     34.7 s  bcc=9799080
+=== finished 2026-11-17 23:36:47
+###### ours kmer bs=500000 2026-11-17 23:36:47
+=== full experiment  reps=3  bs={500000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-17 23:36:47
+  kmer_U1a               bs=500000    default   rep1  ok        38437 ms      72.6 s  bcc=21785336
+  kmer_U1a               bs=500000    default   rep2  ok        38398 ms      70.4 s  bcc=21785336
+  kmer_U1a               bs=500000    default   rep3  ok        38404 ms      70.3 s  bcc=21785336
+  kmer_V2a               bs=500000    default   rep1  ok        25053 ms      39.1 s  bcc=9799080
+  kmer_V2a               bs=500000    default   rep2  ok        24913 ms      39.4 s  bcc=9799080
+  kmer_V2a               bs=500000    default   rep3  ok        24919 ms      39.0 s  bcc=9799080
+=== finished 2026-11-17 23:42:18
+###### two-pass kmer bs=500000 2026-11-17 23:42:18
+=== two-pass baseline  reps=3  bs={500000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-17 23:42:18
+  -- kmer_U1a bs=500000 bound 858s (1/b law)
+  -- kmer_V2a bs=500000 bound 556s (1/b law)
+=== finished 2026-11-17 23:42:18
+###### ours kmer bs=250000 2026-11-17 23:42:18
+=== full experiment  reps=3  bs={250000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-17 23:42:18
+  kmer_U1a               bs=250000    default   rep1  ok        76181 ms     103.8 s  bcc=21785336
+  kmer_U1a               bs=250000    default   rep2  ok        76088 ms     105.6 s  bcc=21785336
+  kmer_U1a               bs=250000    default   rep3  ok        76093 ms     107.7 s  bcc=21785336
+  kmer_V2a               bs=250000    default   rep1  ok        49188 ms      63.1 s  bcc=9799080
+  kmer_V2a               bs=250000    default   rep2  ok        49220 ms      63.5 s  bcc=9799080
+  kmer_V2a               bs=250000    default   rep3  ok        49259 ms      62.8 s  bcc=9799080
+=== finished 2026-11-17 23:50:45
+###### two-pass kmer bs=250000 2026-11-17 23:50:45
+=== two-pass baseline  reps=3  bs={250000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-17 23:50:45
+  -- kmer_U1a bs=250000 bound 1797s (1/b law)
+###### ours kmer bs=8000000 2026-11-18 00:06:16
+=== full experiment  reps=3  bs={8000000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-18 00:06:16
+=== finished 2026-11-18 00:06:16
+###### two-pass kmer bs=8000000 2026-11-18 00:06:16
+=== two-pass baseline  reps=3  bs={8000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 00:06:16
+=== finished 2026-11-18 00:06:16
+###### ours kmer bs=4000000 2026-11-18 00:06:16
+=== full experiment  reps=3  bs={4000000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-18 00:06:16
+=== finished 2026-11-18 00:06:16
+###### two-pass kmer bs=4000000 2026-11-18 00:06:16
+=== two-pass baseline  reps=3  bs={4000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 00:06:16
+  -- kmer_U1a bs=4000000 bound 120s (1/b law)
+  -- kmer_V2a bs=4000000 bound 120s (1/b law)
+=== finished 2026-11-18 00:06:16
+###### ours kmer bs=2000000 2026-11-18 00:06:16
+=== full experiment  reps=3  bs={2000000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-18 00:06:16
+=== finished 2026-11-18 00:06:16
+###### two-pass kmer bs=2000000 2026-11-18 00:06:16
+=== two-pass baseline  reps=3  bs={2000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 00:06:16
+  -- kmer_U1a bs=2000000 bound 214s (1/b law)
+  -- kmer_V2a bs=2000000 bound 139s (1/b law)
+=== finished 2026-11-18 00:06:16
+###### ours kmer bs=1000000 2026-11-18 00:06:16
+=== full experiment  reps=3  bs={1000000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-18 00:06:16
+=== finished 2026-11-18 00:06:16
+###### two-pass kmer bs=1000000 2026-11-18 00:06:16
+=== two-pass baseline  reps=3  bs={1000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 00:06:16
+  -- kmer_U1a bs=1000000 bound 429s (1/b law)
+  -- kmer_V2a bs=1000000 bound 278s (1/b law)
+=== finished 2026-11-18 00:06:16
+###### ours kmer bs=500000 2026-11-18 00:06:16
+=== full experiment  reps=3  bs={500000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-18 00:06:16
+=== finished 2026-11-18 00:06:16
+###### two-pass kmer bs=500000 2026-11-18 00:06:16
+=== two-pass baseline  reps=3  bs={500000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 00:06:16
+  -- kmer_U1a bs=500000 bound 858s (1/b law)
+  -- kmer_V2a bs=500000 bound 556s (1/b law)
+=== finished 2026-11-18 00:06:16
+###### ours kmer bs=250000 2026-11-18 00:06:16
+=== full experiment  reps=3  bs={250000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-18 00:06:16
+=== finished 2026-11-18 00:06:16
+###### two-pass kmer bs=250000 2026-11-18 00:06:16
+=== two-pass baseline  reps=3  bs={250000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 00:06:16
+  -- kmer_U1a bs=250000 bound 1797s (1/b law)
+  kmer_U1a               bs=250000    rep1  timeout         ms (st 55)   1797.3 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+  -- kmer_V2a bs=250000 bound 1131s (1/b law)
+  kmer_V2a               bs=250000    rep1  ok       126407 ms (st 43)    128.9 s  bcc=9799080
+     cell bound -> 1031s (first good run 128.909979745s)
+  kmer_V2a               bs=250000    rep2  ok       126413 ms (st 43)    128.9 s  bcc=9799080
+  kmer_V2a               bs=250000    rep3  ok       126362 ms (st 43)    128.8 s  bcc=9799080
+=== finished 2026-11-18 00:27:09
+###### ours kmer bs=125000 2026-11-18 00:27:09
+=== full experiment  reps=3  bs={125000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-18 00:27:09
+  kmer_U1a               bs=125000    default   rep1  ok       151303 ms     180.5 s  bcc=21785336
+  kmer_U1a               bs=125000    default   rep2  ok       151429 ms     181.1 s  bcc=21785336
+  kmer_U1a               bs=125000    default   rep3  ok       151452 ms     181.0 s  bcc=21785336
+  kmer_V2a               bs=125000    default   rep1  ok        97616 ms     113.8 s  bcc=9799080
+  kmer_V2a               bs=125000    default   rep2  ok        97411 ms     112.7 s  bcc=9799080
+  kmer_V2a               bs=125000    default   rep3  ok        97817 ms     114.5 s  bcc=9799080
+=== finished 2026-11-18 00:41:53
+###### two-pass kmer bs=125000 2026-11-18 00:41:53
+=== two-pass baseline  reps=3  bs={125000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 00:41:53
+  -- kmer_U1a bs=125000 bound 3595s (1/b law)
+  kmer_U1a               bs=125000    rep1  timeout         ms (st 59)   3595.3 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+  -- kmer_V2a bs=125000 bound 2262s (1/b law)
+  kmer_V2a               bs=125000    rep1  ok       252784 ms (st 45)    255.3 s  bcc=9799080
+     cell bound -> 2042s (first good run 255.341264494s)
+  kmer_V2a               bs=125000    rep2  timeout         ms (st 45)   2042.3 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 02:20:06
+###### ours kmer bs=64000 2026-11-18 02:20:06
+=== full experiment  reps=3  bs={64000}  tmo=7200s  csv=experiments/results/bssweep.csv
+=== started 2026-11-18 02:20:06
+  kmer_U1a               bs=64000     default   rep1  ok       294757 ms     324.2 s  bcc=21785336
+  kmer_U1a               bs=64000     default   rep2  ok       294727 ms     331.8 s  bcc=21785336
+  kmer_U1a               bs=64000     default   rep3  ok       295074 ms     332.5 s  bcc=21785336
+  kmer_V2a               bs=64000     default   rep1  ok       191637 ms     206.7 s  bcc=9799080
+  kmer_V2a               bs=64000     default   rep2  ok       191633 ms     206.5 s  bcc=9799080
+  kmer_V2a               bs=64000     default   rep3  ok       191553 ms     207.1 s  bcc=9799080
+=== finished 2026-11-18 02:46:55
+###### two-pass kmer bs=64000 2026-11-18 02:46:55
+=== two-pass baseline  reps=3  bs={64000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 02:46:55
+  -- kmer_U1a bs=64000: strong-hang-at-b=125000 -- not run
+  -- kmer_V2a bs=64000 bound 4418s (1/b law)
+=== finished 2026-11-18 02:46:56
+###### europe_osm bs=8M 2026-11-18 02:46:56
+=== full experiment  reps=3  bs={8000000}  tmo=1800s  csv=experiments/results/bssweep.csv
+=== started 2026-11-18 02:46:56
+  europe_osm             bs=8000000   default   rep1  ok          720 ms      13.8 s  bcc=11502742
+  europe_osm             bs=8000000   default   rep2  ok          719 ms      14.4 s  bcc=11502742
+  europe_osm             bs=8000000   default   rep3  ok          725 ms      14.1 s  bcc=11502742
+=== finished 2026-11-18 02:47:38
+=== two-pass baseline  reps=3  bs={8000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 02:47:38
+=== finished 2026-11-18 02:47:38
+###### kmer fill done 2026-11-18 02:47:38

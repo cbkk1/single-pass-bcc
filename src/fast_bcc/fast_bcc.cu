@@ -1,7 +1,9 @@
 #include <cuda_runtime.h>
 #include <iostream>
+#include <climits>
 
 #include "fast_bcc/fast_bcc.cuh"
+#include "fast_bcc/repair.cuh"
 #include "utility/cuda_utility.cuh"
 #include "fast_bcc/spanning_tree.cuh"
 #include "fast_bcc/sparse_table_min.cuh"
@@ -202,10 +204,28 @@ void update_w1_w2(
 }
 
 
+// Seed the position arrays with the reduction identities. compute_a1 writes
+// only at each vertex's FIRST and LAST occurrence, so any position that is
+// merely a middle occurrence is left untouched. With one component that is
+// harmless; with a forest there is one unwritten slot per component, and stale
+// data there poisons every range minimum that spans it.
+__global__
+void init_a(int* a, int n, int v) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i < n) a[i] = v;
+}
+
 __global__
 void compute_a1(int* first_occ, int* last_occ, int numVert , int* w1 , int* a1) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx < numVert) {
+#ifdef BCC_GUARD_A1
+        int f = first_occ[idx], l = last_occ[idx];
+        if (f < 0 || f >= 2*numVert || l < 0 || l >= 2*numVert) {
+            printf("A1BAD idx=%d numVert=%d first=%d last=%d\n", idx, numVert, f, l);
+            return;
+        }
+#endif
         a1[first_occ[idx]] = w1[idx];
         a1[last_occ[idx]] = w1[idx];
     }
@@ -287,6 +307,10 @@ void assign_tags(const int root, GPU_BCG& g_bcg_ds, bool isLastBatch) {
     );
     CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize device");
 
+    init_a<<<CEIL(2 * numVert, tb_size), tb_size>>>(d_a1, 2 * numVert, INT_MAX);
+    init_a<<<CEIL(2 * numVert, tb_size), tb_size>>>(d_a2, 2 * numVert, INT_MIN);
+    CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize init_a");
+
     compute_a1<<<CEIL(numVert, tb_size), tb_size>>>(
         d_first_occ, d_last_occ, 
         numVert, 
@@ -304,7 +328,10 @@ void assign_tags(const int root, GPU_BCG& g_bcg_ds, bool isLastBatch) {
     );
     CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize device");
 
-    fill_left_right<<<CEIL(numEdges, tb_size), tb_size>>>(
+    // over numVert, not numEdges: the kernel guards on `idx < numVert`, and on a
+    // FOREST numEdges can be far smaller than numVert (many isolated nodes), so
+    // launching over numEdges leaves most RMQ query bounds uninitialised.
+    fill_left_right<<<CEIL(numVert, tb_size), tb_size>>>(
         d_first_occ, 
         d_last_occ, 
         numVert, 
@@ -470,6 +497,43 @@ int update_bcc_numbers(GPU_BCG& g_bcg_ds, int numVert) {
     return bcg_num_vert;
 }
 
+// Steps 1-3 only; see the contract in fast_bcc.cuh.
+extern bool g_bcc_last_batch;
+
+void Fast_BCC_labels(GPU_BCG& g_bcg_ds) {
+
+    // step 1: spanning tree + Euler tour (fills d_parent, d_first_occ, d_last_occ)
+    int root = construct_spanning_tree(g_bcg_ds);
+    g_bcg_ds.last_root = root;
+
+    // step 2: the low/high tags
+    assign_tags(root, g_bcg_ds, /*isLastBatch=*/false);
+
+    // step 3: connectivity over non-fence tree edges + the selected cross
+    // edges, leaving the implicit-BCC labels in d_rep.
+    //
+    // lastBatch=false picks union_find_gpu_COO over union_find_gpu_repair: the
+    // repair variant applies the false-cut-vertex fix, which is only sound once
+    // the whole stream has been read -- mid-stream a real block de-merged down
+    // to ONE resident has |f^-1| = 1, so repair's counting test calls it a real
+    // vertex, leaves its fence edges as separators, and the block fragments.
+    // Measured: BCC_PRED=cnt every round splits 4 BCCs per 1400 random graphs;
+    // see evidence/why-not-repairs-predicate.sh for a 9-vertex witness. The
+    // per-round filter uses the structural test x < n_b_prev instead, which
+    // cannot be fooled this way, and it leaves no false cut vertex for repair
+    // to fix -- hence repair is never called on this path at all.
+    // BCC_END_REPAIR=1 answers the question "is Euro-Par's BCC_Repair at the
+    // end enough for the stream?" -- on the LAST batch it computes d_counter =
+    // |f^-1(.)| via repair() and runs union_find_gpu_repair, i.e. the real
+    // false-cut-vertex fix, in place of the plain CC. Off by default.
+    bool end_rep = getenv("BCC_END_REPAIR") && g_bcc_last_batch;
+    if (end_rep) repair(g_bcg_ds);
+    // g_bcg_ds.n_b is still LAST round's block count here -- Compress-Graph
+    // only advances it after it returns -- so it is exactly the watermark
+    // separating carried block nodes from everything else.
+    CC(g_bcg_ds, /*lastBatch=*/end_rep, /*nb_keep=*/g_bcg_ds.n_b);
+}
+
 void Fast_BCC(GPU_BCG& g_bcg_ds, const bool isLastBatch) {
 
     int numVert     =   g_bcg_ds.numVert;
@@ -506,8 +570,9 @@ void Fast_BCC(GPU_BCG& g_bcg_ds, const bool isLastBatch) {
     start = std::chrono::high_resolution_clock::now();
 	// step 3: Apply CC
 
-    // update this code
-	CC(g_bcg_ds, isLastBatch);
+    // nb_keep=0: the legacy split-range path has no dense block watermark, so
+    // step 4 stays the stock Fast_BCC fence test here.
+	CC(g_bcg_ds, isLastBatch, /*nb_keep=*/0);
 
     // end = std::chrono::high_resolution_clock::now();
     // dur = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();

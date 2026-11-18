@@ -1,0 +1,280 @@
+=== two-pass baseline  reps=3  bs={500000 2000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-15 13:04:53
+  as-Skitter             bs=500000    rep1  ok          112 ms (st 4)      0.6 s  bcc=239476
+  as-Skitter             bs=500000    rep2  ok          112 ms (st 4)      0.5 s  bcc=239476
+  as-Skitter             bs=500000    rep3  ok          112 ms (st 4)      0.5 s  bcc=239476
+  as-Skitter             bs=2000000   rep1  ok           39 ms (st 3)      0.5 s  bcc=239476
+  as-Skitter             bs=2000000   rep2  ok           38 ms (st 3)      0.4 s  bcc=239476
+  as-Skitter             bs=2000000   rep3  ok           44 ms (st 4)      0.5 s  bcc=239476
+  coPapersCiteseer       bs=500000    rep1  ok           72 ms (st 5)      0.5 s  bcc=11577
+  coPapersCiteseer       bs=500000    rep2  ok           73 ms (st 5)      0.5 s  bcc=11577
+  coPapersCiteseer       bs=500000    rep3  ok           73 ms (st 5)      0.5 s  bcc=11577
+  coPapersCiteseer       bs=2000000   rep1  ok           31 ms (st 5)      0.4 s  bcc=11577
+  coPapersCiteseer       bs=2000000   rep2  ok           31 ms (st 5)      0.4 s  bcc=11577
+  coPapersCiteseer       bs=2000000   rep3  ok           31 ms (st 5)      0.4 s  bcc=11577
+  coPapersDBLP           bs=500000    rep1  ok           76 ms (st 5)      0.5 s  bcc=17066
+  coPapersDBLP           bs=500000    rep2  ok           76 ms (st 5)      0.5 s  bcc=17066
+  coPapersDBLP           bs=500000    rep3  ok           76 ms (st 5)      0.4 s  bcc=17066
+  coPapersDBLP           bs=2000000   rep1  ok           30 ms (st 5)      0.4 s  bcc=17066
+  coPapersDBLP           bs=2000000   rep2  ok           33 ms (st 5)      0.5 s  bcc=17066
+  coPapersDBLP           bs=2000000   rep3  ok           29 ms (st 5)      0.4 s  bcc=17066
+  delaunay_n24           bs=500000    rep1  ok         3881 ms (st 21)      5.0 s  bcc=1
+  delaunay_n24           bs=500000    rep2  ok         3886 ms (st 21)      4.9 s  bcc=1
+  delaunay_n24           bs=500000    rep3  ok         3891 ms (st 21)      5.0 s  bcc=1
+  delaunay_n24           bs=2000000   rep1  ok         1058 ms (st 20)      2.2 s  bcc=1
+  delaunay_n24           bs=2000000   rep2  ok         1056 ms (st 20)      2.2 s  bcc=1
+  delaunay_n24           bs=2000000   rep3  ok         1080 ms (st 20)      2.2 s  bcc=1
+  eu-2005                bs=500000    rep1  ok           94 ms (st 6)      0.5 s  bcc=53013
+  eu-2005                bs=500000    rep2  ok           93 ms (st 6)      0.5 s  bcc=53013
+  eu-2005                bs=500000    rep3  ok           93 ms (st 6)      0.5 s  bcc=53013
+  eu-2005                bs=2000000   rep1  ok           38 ms (st 5)      0.4 s  bcc=53013
+  eu-2005                bs=2000000   rep2  ok           38 ms (st 5)      0.4 s  bcc=53013
+  eu-2005                bs=2000000   rep3  ok           37 ms (st 5)      0.4 s  bcc=53013
+  europe_osm             bs=500000    rep1  ok        15318 ms (st 32)     17.8 s  bcc=11502742
+  europe_osm             bs=500000    rep2  ok        15374 ms (st 31)     17.6 s  bcc=11502742
+  europe_osm             bs=500000    rep3  ok        15320 ms (st 32)     17.6 s  bcc=11502742
+  europe_osm             bs=2000000   rep1  ok         3946 ms (st 27)      6.2 s  bcc=11502742
+  europe_osm             bs=2000000   rep2  ok         3974 ms (st 26)      6.3 s  bcc=11502742
+  europe_osm             bs=2000000   rep3  ok         3955 ms (st 27)      6.3 s  bcc=11502742
+  GAP-road               bs=500000    rep1  crash           ms (st 13)      3.0 s  bcc=?
+     retry once
+  GAP-road               bs=500000    rep1  ok         4404 ms (st 13)      6.1 s  bcc=7390330
+  GAP-road               bs=500000    rep2  ok         4408 ms (st 13)      6.1 s  bcc=7390330
+  GAP-road               bs=500000    rep3  ok         4406 ms (st 13)      6.1 s  bcc=7390330
+  GAP-road               bs=2000000   rep1  ok         1167 ms (st 12)      2.9 s  bcc=7390330
+  GAP-road               bs=2000000   rep2  ok         1187 ms (st 12)      2.9 s  bcc=7390330
+  GAP-road               bs=2000000   rep3  ok         1167 ms (st 12)      2.9 s  bcc=7390330
+  germany_osm            bs=500000    rep1  ok          776 ms (st 6)      1.5 s  bcc=2524313
+  germany_osm            bs=500000    rep2  ok          775 ms (st 6)      1.5 s  bcc=2524313
+  germany_osm            bs=500000    rep3  ok          777 ms (st 6)      1.4 s  bcc=2524313
+  germany_osm            bs=2000000   rep1  ok          228 ms (st 5)      0.9 s  bcc=2524313
+  germany_osm            bs=2000000   rep2  ok          228 ms (st 5)      1.0 s  bcc=2524313
+  germany_osm            bs=2000000   rep3  ok          228 ms (st 5)      0.9 s  bcc=2524313
+  higgs-twitter          bs=500000    rep1  ok           53 ms (st 4)      0.4 s  bcc=24910
+  higgs-twitter          bs=500000    rep2  ok           53 ms (st 4)      0.4 s  bcc=24910
+  higgs-twitter          bs=500000    rep3  ok           53 ms (st 4)      0.4 s  bcc=24910
+  higgs-twitter          bs=2000000   rep1  ok           24 ms (st 4)      0.3 s  bcc=24910
+  higgs-twitter          bs=2000000   rep2  ok           23 ms (st 4)      0.3 s  bcc=24910
+  higgs-twitter          bs=2000000   rep3  ok           26 ms (st 4)      0.4 s  bcc=24910
+  hollywood-2009         bs=500000    rep1  ok          333 ms (st 20)      1.1 s  bcc=78287
+  hollywood-2009         bs=500000    rep2  ok          334 ms (st 20)      1.1 s  bcc=78287
+  hollywood-2009         bs=500000    rep3  crash           ms (st 20)      1.2 s  bcc=?
+     retry once
+  hollywood-2009         bs=500000    rep3  ok          337 ms (st 20)      1.1 s  bcc=78287
+  hollywood-2009         bs=2000000   rep1  ok          125 ms (st 19)      0.9 s  bcc=78287
+  hollywood-2009         bs=2000000   rep2  ok          124 ms (st 19)      0.9 s  bcc=78287
+  hollywood-2009         bs=2000000   rep3  ok          124 ms (st 19)      0.9 s  bcc=78287
+  hugebubbles-00020      bs=500000    rep1  ok         5306 ms (st 17)      6.2 s  bcc=1
+  hugebubbles-00020      bs=500000    rep2  ok         5269 ms (st 19)      6.2 s  bcc=1
+  hugebubbles-00020      bs=500000    rep3  ok         5306 ms (st 17)      6.0 s  bcc=1
+  hugebubbles-00020      bs=2000000   rep1  ok         1406 ms (st 17)      2.3 s  bcc=1
+  hugebubbles-00020      bs=2000000   rep2  ok         1407 ms (st 17)      2.2 s  bcc=1
+  hugebubbles-00020      bs=2000000   rep3  ok         1399 ms (st 17)      2.2 s  bcc=1
+  in-2004                bs=500000    rep1  ok          105 ms (st 5)      0.5 s  bcc=299221
+  in-2004                bs=500000    rep2  ok          105 ms (st 5)      0.5 s  bcc=299221
+  in-2004                bs=500000    rep3  ok          105 ms (st 5)      0.5 s  bcc=299221
+  in-2004                bs=2000000   rep1  ok           39 ms (st 4)      0.5 s  bcc=299221
+  in-2004                bs=2000000   rep2  ok           39 ms (st 4)      0.4 s  bcc=299221
+  in-2004                bs=2000000   rep3  ok           39 ms (st 4)      0.4 s  bcc=299221
+  indochina-2004         bs=500000    rep1  ok         4484 ms (st 57)      6.4 s  bcc=1320484
+  indochina-2004         bs=500000    rep2  ok         4492 ms (st 57)      6.5 s  bcc=1320484
+  indochina-2004         bs=500000    rep3  crash           ms (st 57)      3.6 s  bcc=?
+     retry once
+  indochina-2004         bs=500000    rep3  ok         4484 ms (st 57)      6.4 s  bcc=1320484
+  indochina-2004         bs=2000000   rep1  ok         1303 ms (st 53)      3.4 s  bcc=1320484
+  indochina-2004         bs=2000000   rep2  ok         1310 ms (st 53)      3.3 s  bcc=1320484
+  indochina-2004         bs=2000000   rep3  ok         1320 ms (st 53)      3.3 s  bcc=1320484
+  kmer_U1a               bs=500000    rep1  ok       101388 ms (st 53)    105.4 s  bcc=21785336
+  kmer_U1a               bs=500000    rep2  crash           ms (st 53)      8.0 s  bcc=?
+     retry once
+  kmer_U1a               bs=500000    rep2  ok       101407 ms (st 53)    105.6 s  bcc=21785336
+  kmer_U1a               bs=500000    rep3  crash           ms (st 54)     45.7 s  bcc=?
+     retry once
+  kmer_U1a               bs=500000    rep3  crash           ms (st 53)      8.0 s  bcc=?
+  kmer_U1a               bs=2000000   rep1  ok        25661 ms (st 50)     30.7 s  bcc=21785336
+  kmer_U1a               bs=2000000   rep2  ok        25661 ms (st 50)     30.4 s  bcc=21785336
+=== two-pass baseline  reps=3  bs={500000 2000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-15 13:46:59
+  kmer_U1a               bs=2000000   rep3  ok        28468 ms (st 50)     33.5 s  bcc=21785336
+  kmer_V2a               bs=500000    rep1  ok        70385 ms (st 42)     72.9 s  bcc=9799080
+  kmer_V2a               bs=500000    rep2  ok        70411 ms (st 42)     73.3 s  bcc=9799080
+  kmer_V2a               bs=500000    rep3  ok        70354 ms (st 42)     73.2 s  bcc=9799080
+  kmer_V2a               bs=2000000   rep1  ok        18070 ms (st 40)     21.1 s  bcc=9799080
+  kmer_V2a               bs=2000000   rep2  ok        17985 ms (st 40)     20.8 s  bcc=9799080
+  kmer_V2a               bs=2000000   rep3  ok        17982 ms (st 40)     20.9 s  bcc=9799080
+  kron_g500-logn18       bs=500000    rep1  crash           ms (st 8)      1.5 s  bcc=?
+     retry once
+  kron_g500-logn18       bs=500000    rep1  crash           ms (st 8)      1.7 s  bcc=?
+  kron_g500-logn18       bs=500000    rep2  crash           ms (st 8)      1.5 s  bcc=?
+     retry once
+  kron_g500-logn18       bs=500000    rep2  crash           ms (st 8)      1.5 s  bcc=?
+  kron_g500-logn18       bs=500000    rep3  crash           ms (st 8)      1.6 s  bcc=?
+     retry once
+  kron_g500-logn18       bs=500000    rep3  crash           ms (st 8)      1.6 s  bcc=?
+  kron_g500-logn18       bs=2000000   rep1  crash           ms (st 9)      1.5 s  bcc=?
+     retry once
+  kron_g500-logn18       bs=2000000   rep1  crash           ms (st 9)      1.6 s  bcc=?
+  kron_g500-logn18       bs=2000000   rep2  crash           ms (st 9)      1.6 s  bcc=?
+     retry once
+  kron_g500-logn18       bs=2000000   rep2  crash           ms (st 9)      1.7 s  bcc=?
+  kron_g500-logn18       bs=2000000   rep3  crash           ms (st 9)      1.6 s  bcc=?
+     retry once
+  kron_g500-logn18       bs=2000000   rep3  crash           ms (st 9)      1.5 s  bcc=?
+  kron_g500-logn19       bs=500000    rep1  crash           ms (st 17)      1.8 s  bcc=?
+     retry once
+  kron_g500-logn19       bs=500000    rep1  crash           ms (st 17)      2.0 s  bcc=?
+  kron_g500-logn19       bs=500000    rep2  crash           ms (st 17)      1.8 s  bcc=?
+     retry once
+  kron_g500-logn19       bs=500000    rep2  crash           ms (st 17)      1.8 s  bcc=?
+  kron_g500-logn19       bs=500000    rep3  crash           ms (st 17)      1.7 s  bcc=?
+     retry once
+  kron_g500-logn19       bs=500000    rep3  crash           ms (st 17)      1.7 s  bcc=?
+  kron_g500-logn19       bs=2000000   rep1  crash           ms (st 17)      1.6 s  bcc=?
+     retry once
+  kron_g500-logn19       bs=2000000   rep1  crash           ms (st 17)      2.0 s  bcc=?
+  kron_g500-logn19       bs=2000000   rep2  crash           ms (st 18)      1.7 s  bcc=?
+     retry once
+  kron_g500-logn19       bs=2000000   rep2  crash           ms (st 18)      1.7 s  bcc=?
+  kron_g500-logn19       bs=2000000   rep3  crash           ms (st 18)      1.6 s  bcc=?
+     retry once
+  kron_g500-logn19       bs=2000000   rep3  crash           ms (st 18)      1.7 s  bcc=?
+  kron_g500-logn20       bs=500000    rep1  crash           ms (st 37)      2.0 s  bcc=?
+     retry once
+  kron_g500-logn20       bs=500000    rep1  crash           ms (st 37)      2.2 s  bcc=?
+  kron_g500-logn20       bs=500000    rep2  crash           ms (st 36)      2.1 s  bcc=?
+     retry once
+  kron_g500-logn20       bs=500000    rep2  crash           ms (st 36)      2.2 s  bcc=?
+  kron_g500-logn20       bs=500000    rep3  crash           ms (st 35)      2.3 s  bcc=?
+     retry once
+  kron_g500-logn20       bs=500000    rep3  crash           ms (st 36)      2.0 s  bcc=?
+  kron_g500-logn20       bs=2000000   rep1  crash           ms (st 43)      2.0 s  bcc=?
+     retry once
+  kron_g500-logn20       bs=2000000   rep1  crash           ms (st 43)      1.9 s  bcc=?
+  kron_g500-logn20       bs=2000000   rep2  crash           ms (st 43)      2.0 s  bcc=?
+     retry once
+  kron_g500-logn20       bs=2000000   rep2  crash           ms (st 43)      2.0 s  bcc=?
+  kron_g500-logn20       bs=2000000   rep3  crash           ms (st 43)      2.1 s  bcc=?
+     retry once
+  kron_g500-logn20       bs=2000000   rep3  crash           ms (st 43)      2.1 s  bcc=?
+  kron_g500-logn21       bs=500000    rep1  crash           ms (st 77)      2.7 s  bcc=?
+     retry once
+  kron_g500-logn21       bs=500000    rep1  crash           ms (st 76)      2.9 s  bcc=?
+  kron_g500-logn21       bs=500000    rep2  crash           ms (st 77)      3.0 s  bcc=?
+     retry once
+  kron_g500-logn21       bs=500000    rep2  crash           ms (st 77)      2.9 s  bcc=?
+  kron_g500-logn21       bs=500000    rep3  crash           ms (st 78)      2.9 s  bcc=?
+     retry once
+  kron_g500-logn21       bs=500000    rep3  crash           ms (st 79)      2.7 s  bcc=?
+  kron_g500-logn21       bs=2000000   rep1  crash           ms (st 87)      2.8 s  bcc=?
+     retry once
+  kron_g500-logn21       bs=2000000   rep1  crash           ms (st 87)      2.7 s  bcc=?
+  kron_g500-logn21       bs=2000000   rep2  crash           ms (st 88)      3.0 s  bcc=?
+     retry once
+  kron_g500-logn21       bs=2000000   rep2  crash           ms (st 86)      2.8 s  bcc=?
+  kron_g500-logn21       bs=2000000   rep3  crash           ms (st 96)      3.5 s  bcc=?
+     retry once
+  kron_g500-logn21       bs=2000000   rep3  crash           ms (st 87)      3.0 s  bcc=?
+  ljournal-2008          bs=500000    rep1  crash           ms (st 18)      2.9 s  bcc=?
+     retry once
+  ljournal-2008          bs=500000    rep1  crash           ms (st 18)      3.1 s  bcc=?
+  ljournal-2008          bs=500000    rep2  crash           ms (st 18)      3.2 s  bcc=?
+     retry once
+  ljournal-2008          bs=500000    rep2  crash           ms (st 18)      3.0 s  bcc=?
+  ljournal-2008          bs=500000    rep3  crash           ms (st 22)      3.3 s  bcc=?
+     retry once
+  ljournal-2008          bs=500000    rep3  crash           ms (st 18)      3.1 s  bcc=?
+  ljournal-2008          bs=2000000   rep1  crash           ms (st 17)      2.4 s  bcc=?
+     retry once
+  ljournal-2008          bs=2000000   rep1  crash           ms (st 18)      2.5 s  bcc=?
+  ljournal-2008          bs=2000000   rep2  crash           ms (st 17)      2.4 s  bcc=?
+     retry once
+  ljournal-2008          bs=2000000   rep2  crash           ms (st 17)      2.5 s  bcc=?
+  ljournal-2008          bs=2000000   rep3  crash           ms (st 17)      2.3 s  bcc=?
+     retry once
+  ljournal-2008          bs=2000000   rep3  crash           ms (st 17)      2.5 s  bcc=?
+  rgg_n_2_23_s0          bs=500000    rep1  timeout         ms (st 29)   1800.3 s  bcc=?
+     retry once
+  rgg_n_2_23_s0          bs=500000    rep1  ok         2247 ms (st 29)      3.4 s  bcc=61
+  rgg_n_2_23_s0          bs=500000    rep2  ok         2249 ms (st 29)      3.6 s  bcc=61
+  rgg_n_2_23_s0          bs=500000    rep3  ok         2244 ms (st 29)      3.2 s  bcc=61
+  rgg_n_2_23_s0          bs=2000000   rep1  ok          653 ms (st 27)      1.8 s  bcc=61
+  rgg_n_2_23_s0          bs=2000000   rep2  ok          654 ms (st 27)      1.8 s  bcc=61
+  rgg_n_2_23_s0          bs=2000000   rep3  ok          650 ms (st 27)      1.7 s  bcc=61
+  rgg_n_2_24_s0          bs=500000    rep1  ok         9275 ms (st 60)     11.2 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    rep2  ok         9311 ms (st 60)     11.2 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    rep3  ok         9262 ms (st 60)     11.2 s  bcc=69
+  rgg_n_2_24_s0          bs=2000000   rep1  ok         2510 ms (st 56)      4.4 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   rep2  ok         2520 ms (st 56)      4.4 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   rep3  ok         2516 ms (st 56)      4.5 s  bcc=70
+  road_usa               bs=500000    rep1  ok         4492 ms (st 13)      6.2 s  bcc=7390330
+  road_usa               bs=500000    rep2  ok         4445 ms (st 13)      6.2 s  bcc=7390330
+  road_usa               bs=500000    rep3  ok         4398 ms (st 13)      6.1 s  bcc=7390330
+  road_usa               bs=2000000   rep1  ok         1163 ms (st 12)      2.9 s  bcc=7390330
+  road_usa               bs=2000000   rep2  ok         1169 ms (st 12)      2.9 s  bcc=7390330
+  road_usa               bs=2000000   rep3  ok         1163 ms (st 12)      2.9 s  bcc=7390330
+  soc-LiveJournal1       bs=500000    rep1  crash           ms (st 15)      2.5 s  bcc=?
+     retry once
+  soc-LiveJournal1       bs=500000    rep1  crash           ms (st 15)      2.3 s  bcc=?
+  soc-LiveJournal1       bs=500000    rep2  crash           ms (st 15)      2.5 s  bcc=?
+     retry once
+  soc-LiveJournal1       bs=500000    rep2  crash           ms (st 15)      2.5 s  bcc=?
+  soc-LiveJournal1       bs=500000    rep3  crash           ms (st 15)      2.5 s  bcc=?
+     retry once
+  soc-LiveJournal1       bs=500000    rep3  crash           ms (st 15)      2.4 s  bcc=?
+  soc-LiveJournal1       bs=2000000   rep1  crash           ms (st 14)      2.1 s  bcc=?
+     retry once
+  soc-LiveJournal1       bs=2000000   rep1  crash           ms (st 14)      2.4 s  bcc=?
+  soc-LiveJournal1       bs=2000000   rep2  crash           ms (st 14)      2.1 s  bcc=?
+     retry once
+  soc-LiveJournal1       bs=2000000   rep2  crash           ms (st 14)      2.1 s  bcc=?
+  soc-LiveJournal1       bs=2000000   rep3  crash           ms (st 14)      2.1 s  bcc=?
+     retry once
+  soc-LiveJournal1       bs=2000000   rep3  crash           ms (st 14)      2.3 s  bcc=?
+  sx-stackoverflow       bs=500000    rep1  crash           ms (st 11)      1.8 s  bcc=?
+     retry once
+  sx-stackoverflow       bs=500000    rep1  crash           ms (st 11)      2.0 s  bcc=?
+  sx-stackoverflow       bs=500000    rep2  crash           ms (st 11)      1.9 s  bcc=?
+     retry once
+  sx-stackoverflow       bs=500000    rep2  crash           ms (st 11)      1.9 s  bcc=?
+  sx-stackoverflow       bs=500000    rep3  crash           ms (st 11)      1.9 s  bcc=?
+     retry once
+  sx-stackoverflow       bs=500000    rep3  crash           ms (st 11)      1.8 s  bcc=?
+  sx-stackoverflow       bs=2000000   rep1  crash           ms (st 10)      1.9 s  bcc=?
+     retry once
+  sx-stackoverflow       bs=2000000   rep1  crash           ms (st 11)      1.8 s  bcc=?
+  sx-stackoverflow       bs=2000000   rep2  crash           ms (st 10)      1.8 s  bcc=?
+     retry once
+  sx-stackoverflow       bs=2000000   rep2  crash           ms (st 10)      1.9 s  bcc=?
+  sx-stackoverflow       bs=2000000   rep3  crash           ms (st 10)      1.9 s  bcc=?
+     retry once
+  sx-stackoverflow       bs=2000000   rep3  crash           ms (st 10)      1.9 s  bcc=?
+  uk-2002                bs=500000    rep1  timeout         ms (st 104)   1800.7 s  bcc=?
+     retry once
+  uk-2002                bs=500000    rep1  crash           ms (st 101)     15.2 s  bcc=?
+  uk-2002                bs=500000    rep2  ok        20276 ms (st 100)     23.7 s  bcc=2583923
+  uk-2002                bs=500000    rep3  crash           ms (st 100)      7.1 s  bcc=?
+     retry once
+  uk-2002                bs=500000    rep3  ok        20249 ms (st 104)     23.6 s  bcc=2583923
+  uk-2002                bs=2000000   rep1  ok         5356 ms (st 97)      8.7 s  bcc=2583923
+  uk-2002                bs=2000000   rep2  ok         5536 ms (st 97)      8.9 s  bcc=2583923
+  uk-2002                bs=2000000   rep3  ok         5534 ms (st 97)      8.9 s  bcc=2583923
+  web-BerkStan           bs=500000    rep1  ok           36 ms (st 2)      0.3 s  bcc=62970
+  web-BerkStan           bs=500000    rep2  ok           36 ms (st 2)      0.3 s  bcc=62970
+  web-BerkStan           bs=500000    rep3  ok           36 ms (st 2)      0.3 s  bcc=62970
+  web-BerkStan           bs=2000000   rep1  ok           17 ms (st 2)      0.4 s  bcc=62970
+  web-BerkStan           bs=2000000   rep2  ok           16 ms (st 2)      0.3 s  bcc=62970
+  web-BerkStan           bs=2000000   rep3  ok           17 ms (st 2)      0.3 s  bcc=62970
+  wiki-topcats           bs=500000    rep1  ok          204 ms (st 9)      0.7 s  bcc=6387
+  wiki-topcats           bs=500000    rep2  ok          204 ms (st 9)      0.7 s  bcc=6387
+  wiki-topcats           bs=500000    rep3  ok          204 ms (st 9)      0.7 s  bcc=6387
+  wiki-topcats           bs=2000000   rep1  ok           72 ms (st 8)      0.6 s  bcc=6387
+  wiki-topcats           bs=2000000   rep2  ok           72 ms (st 8)      0.5 s  bcc=6387
+  wiki-topcats           bs=2000000   rep3  ok           72 ms (st 8)      0.5 s  bcc=6387
+  com-Orkut              bs=500000    rep1  ok          914 ms (st 41)      2.5 s  bcc=68117
+  com-Orkut              bs=500000    rep2  ok          913 ms (st 41)      2.4 s  bcc=68117
+  com-Orkut              bs=500000    rep3  ok          918 ms (st 41)      2.4 s  bcc=68117
+  com-Orkut              bs=2000000   rep1  ok          315 ms (st 39)      1.8 s  bcc=68117
+  com-Orkut              bs=2000000   rep2  ok          311 ms (st 39)      1.8 s  bcc=68117
+  com-Orkut              bs=2000000   rep3  ok          311 ms (st 39)      1.9 s  bcc=68117
+experiments/run-twopass.sh: line 100: syntax error near unexpected token `}'
+experiments/run-twopass.sh: line 100: ` }'

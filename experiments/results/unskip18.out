@@ -1,0 +1,142 @@
+###### [1/18] higgs-twitter bs=16000  2026-11-18 11:55:28
+=== two-pass baseline  reps=3  bs={16000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 11:55:28
+  -- higgs-twitter bs=16000 bound 120s (1/b law)
+  higgs-twitter          bs=16000     rep1  fault           ms (st 14)      1.7 s  bcc=?
+     retry once
+  higgs-twitter          bs=16000     rep1  ok         1276 ms (st 17)      1.6 s  bcc=24910
+     cell bound -> 60s (first good run 1.609511516s)
+  higgs-twitter          bs=16000     rep2  timeout         ms (st 15)     60.1 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 11:56:31
+###### [2/18] higgs-twitter bs=8000  2026-11-18 11:56:31
+=== two-pass baseline  reps=3  bs={8000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 11:56:31
+  -- higgs-twitter bs=8000 bound 136s (1/b law)
+  higgs-twitter          bs=8000      rep1  ok         2282 ms (st 27)      2.7 s  bcc=9642
+     cell bound -> 60s (first good run 2.698123687s)
+  higgs-twitter          bs=8000      rep2  fault           ms (st 23)      1.2 s  bcc=?
+     retry once
+  higgs-twitter          bs=8000      rep2  fault           ms (st 29)      1.8 s  bcc=?
+  higgs-twitter          bs=8000      rep3  fault           ms (st 27)      2.4 s  bcc=?
+     retry once
+  higgs-twitter          bs=8000      rep3  fault           ms (st 29)      1.8 s  bcc=?
+=== finished 2026-11-18 11:56:42
+###### [3/18] wiki-topcats bs=16000  2026-11-18 11:56:42
+=== two-pass baseline  reps=3  bs={16000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 11:56:42
+  -- wiki-topcats bs=16000 bound 156s (1/b law)
+  wiki-topcats           bs=16000     rep1  timeout         ms (st 34)    156.2 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 11:59:18
+###### [4/18] wiki-topcats bs=8000  2026-11-18 11:59:18
+=== two-pass baseline  reps=3  bs={8000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 11:59:18
+  -- wiki-topcats bs=8000 bound 312s (1/b law)
+  wiki-topcats           bs=8000      rep1  timeout         ms (st 60)    312.1 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 12:04:30
+###### [5/18] com-Orkut bs=16000  2026-11-18 12:04:30
+=== two-pass baseline  reps=3  bs={16000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 12:04:30
+  -- com-Orkut bs=16000 bound 600s (1/b law)
+  com-Orkut              bs=16000     rep1  timeout         ms (st 131)    600.2 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 12:14:31
+###### [6/18] ljournal-2008 bs=16000  2026-11-18 12:14:31
+=== two-pass baseline  reps=3  bs={16000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 12:14:31
+  -- ljournal-2008 bs=16000 bound 660s (1/b law)
+  ljournal-2008          bs=16000     rep1  timeout         ms (st 68)    660.2 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 12:25:31
+###### [7/18] rgg_n_2_23_s0 bs=16000  2026-11-18 12:25:31
+=== two-pass baseline  reps=3  bs={16000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 12:25:31
+  -- rgg_n_2_23_s0 bs=16000 bound 956s (1/b law)
+  rgg_n_2_23_s0          bs=16000     rep1  fault           ms (st 91)     40.8 s  bcc=?
+     retry once
+  rgg_n_2_23_s0          bs=16000     rep1  timeout         ms (st 89)    956.3 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 12:42:08
+###### [8/18] com-Orkut bs=8000  2026-11-18 12:42:08
+=== two-pass baseline  reps=3  bs={8000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 12:42:08
+  -- com-Orkut bs=8000 bound 1200s (1/b law)
+  com-Orkut              bs=8000      rep1  timeout         ms (st 216)   1200.4 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 13:02:09
+###### [9/18] ljournal-2008 bs=8000  2026-11-18 13:02:09
+=== two-pass baseline  reps=3  bs={8000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 13:02:09
+  -- ljournal-2008 bs=8000 bound 1320s (1/b law)
+  ljournal-2008          bs=8000      rep1  fault           ms (st 113)      8.9 s  bcc=?
+     retry once
+  ljournal-2008          bs=8000      rep1  cap             ms (st 113)     44.5 s  bcc=?
+  ljournal-2008          bs=8000      rep2  cap             ms (st 116)     46.3 s  bcc=?
+  ljournal-2008          bs=8000      rep3  timeout         ms (st 113)   1320.1 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 13:25:49
+###### [10/18] hugebubbles-00020 bs=16000  2026-11-18 13:25:49
+=== two-pass baseline  reps=3  bs={16000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 13:25:49
+  -- hugebubbles-00020 bs=16000 bound 1660s (1/b law)
+  hugebubbles-00020      bs=16000     rep1  timeout         ms (st 43)   1660.2 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 13:53:29
+###### [11/18] indochina-2004 bs=16000  2026-11-18 13:53:29
+=== two-pass baseline  reps=3  bs={16000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 13:53:29
+  -- indochina-2004 bs=16000 bound 1844s (1/b law)
+  indochina-2004         bs=16000     rep1  timeout         ms (st 173)   1844.5 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 14:24:14
+###### [12/18] rgg_n_2_23_s0 bs=8000  2026-11-18 14:24:14
+=== two-pass baseline  reps=3  bs={8000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 14:24:14
+  -- rgg_n_2_23_s0 bs=8000 bound 1912s (1/b law)
+  rgg_n_2_23_s0          bs=8000      rep1  timeout         ms (st 147)   1912.3 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 14:56:06
+###### [13/18] rgg_n_2_24_s0 bs=16000  2026-11-18 14:56:06
+=== two-pass baseline  reps=3  bs={16000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 14:56:06
+  -- rgg_n_2_24_s0 bs=16000 bound 3132s (1/b law)
+  rgg_n_2_24_s0          bs=16000     rep1  timeout         ms (st 178)   3132.4 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 15:48:19
+###### [14/18] hugebubbles-00020 bs=8000  2026-11-18 15:48:19
+=== two-pass baseline  reps=3  bs={8000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 15:48:19
+  -- hugebubbles-00020 bs=8000 bound 3320s (1/b law)
+  hugebubbles-00020      bs=8000      rep1  timeout         ms (st 75)   3320.1 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 16:43:39
+###### [15/18] indochina-2004 bs=8000  2026-11-18 16:43:39
+=== two-pass baseline  reps=3  bs={8000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 16:43:39
+  -- indochina-2004 bs=8000 bound 3688s (1/b law)
+  indochina-2004         bs=8000      rep1  timeout         ms (st 286)   3688.5 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 17:45:07
+###### [16/18] rgg_n_2_24_s0 bs=8000  2026-11-18 17:45:07
+=== two-pass baseline  reps=3  bs={8000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 17:45:07
+  -- rgg_n_2_24_s0 bs=8000 bound 6264s (1/b law)
+  rgg_n_2_24_s0          bs=8000      rep1  timeout         ms (st 310)   6264.4 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 19:29:32
+###### [17/18] uk-2002 bs=16000  2026-11-18 19:29:32
+=== two-pass baseline  reps=3  bs={16000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 19:29:32
+  -- uk-2002 bs=16000 bound 7696s (1/b law)
+  uk-2002                bs=16000     rep1  timeout         ms (st 357)   7696.6 s  bcc=?
+     timed out -- skipping remaining reps for this cell
+=== finished 2026-11-18 21:37:49
+###### [18/18] uk-2002 bs=8000  2026-11-18 21:37:49
+=== two-pass baseline  reps=3  bs={8000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-18 21:37:49
+  -- uk-2002 bs=8000 bound 15392s (1/b law)
+  uk-2002                bs=8000      rep1  fault           ms (st 593)     16.6 s  bcc=?
+     retry once
+  uk-2002                bs=8000      rep1  fault           ms (st 589)     53.2 s  bcc=?

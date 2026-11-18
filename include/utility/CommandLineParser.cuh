@@ -34,6 +34,7 @@ public:
         bool error          = false;
         bool verbose        = false;
         bool g_checker_mode = false;
+        bool gpu_bcc        = false;   // -g: dense ids + GPU Compress-Graph
     };
 
     CommandLineParser(int argc, char* argv[]) {
@@ -67,6 +68,10 @@ private:
     }
 
     void parseArguments(int argc, char* argv[]) {
+        // Positional form:  ./External_BCC <graph-file> [batch-size]
+        // Flags still work and win over positionals, so -i / -b can override.
+        bool pos_batch_seen = false;
+
         for (int i = 1; i < argc; ++i) {
             std::string arg = argv[i];
             if (arg == "-i" && i + 1 < argc) {
@@ -78,6 +83,8 @@ private:
                 args.verbose = true;
             } else if (arg == "-c") {
                 args.g_checker_mode = true;
+            } else if (arg == "-g" || arg == "--gpu-bcc") {
+                args.gpu_bcc = true;
             } else if (arg == "-a" && i + 1 < argc) {
                 std::string algoArg = argv[++i];
                 if (algoArg == "cv") {
@@ -105,8 +112,29 @@ private:
                 args.cudaDevice = device;
             } else if (arg == "-b" && i + 1 < argc) {
                 args.batchSize = std::atol(argv[++i]);
-            } else if (arg == "-e" && i + 1 < argc) { 
+            } else if (arg == "-e" && i + 1 < argc) {
                 args.batchSize = std::atol(argv[++i]);
+            } else if (arg == "-h" || arg == "--help") {
+                args.error = true;          // main prints help_msg and exits
+            } else if (!arg.empty() && arg[0] != '-') {
+                // Bare argument: first is the graph, second is the batch size.
+                if (args.inputFile.empty()) {
+                    args.inputFile = arg;
+                } else if (!pos_batch_seen) {
+                    char* endp = nullptr;
+                    long b = std::strtol(arg.c_str(), &endp, 10);
+                    if (endp && *endp == '\0' && b > 0) {
+                        args.batchSize = b;
+                        pos_batch_seen = true;
+                    } else {
+                        std::cerr << "Error: batch size must be a positive integer, got: "
+                                  << arg << std::endl;
+                        args.error = true;
+                    }
+                } else {
+                    std::cerr << "Unexpected extra argument: " << arg << std::endl;
+                    args.error = true;
+                }
             } else {
                 std::cerr << "Unknown argument: " << arg << std::endl;
                 args.error = true;
@@ -124,6 +152,12 @@ private:
 };
 
 const std::string CommandLineParser::help_msg =
+    "Usage:\n"
+    "  External_BCC <graph-file> [batch-size] [flags]\n"
+    "  External_BCC -i <graph-file> -b <batch-size> [flags]\n"
+    "\n"
+    "Graph formats: .txt/.edges/.eg2 (text edge list), .egr/.bin/.csr (binary CSR)\n"
+    "\n"
     "Command line arguments:\n"
     " -h Print this help and exit\n"
     " -i $input Sets input file to $input (mandatory)\n"
@@ -135,6 +169,8 @@ const std::string CommandLineParser::help_msg =
     " -b $batchSize Sets batch size in bytes (default: quarter of max GPU memory)\n"
     " -e $numOfEdges Specifies the number of edges directly\n"
     " -v Enables verbose output\n"
-    " -c Enables checker mode\n";
+    " -c Enables checker mode\n"
+    " -g Dense ids + Compress-Graph on the GPU (default: split ranges,\n"
+    "    host Tarjan for the BCC step)\n";
 
 #endif // COMMAND_LINE_PARSER_H

@@ -1,4 +1,8 @@
 #include <iostream>
+#include <vector>
+#include <set>
+#include <climits>
+#include <cstdlib>
 #include <fstream>
 #include <cub/cub.cuh>
 #include <cuda_runtime.h>
@@ -9,29 +13,39 @@
 
 // #define DEBUG
 
+// FOREST-CAPABLE. The original compacted with `thid - (thid > root)`, a closed
+// form valid only when exactly ONE slot is empty. A spanning forest of c trees
+// leaves c empty slots, so the slot comes from a prefix sum instead
+// (d_slot, built in gpu_compress.cu), and the twin stride is E/2 = N - c.
 __global__ 
 void create_dup_edges(
     int *d_edges_to, 
     int *d_edges_from, 
     const uint64_t *d_edges_input, 
-    const int root,
+    const int *d_slot,
+    const int *d_croot,
+    int half,
     int N) {
     int thid = blockIdx.x * blockDim.x + threadIdx.x;
     
     if (thid < N) {
 
-        if (thid == root)
+        if (d_croot[thid])            // a root of its tree: no parent edge
           return;
 
-        int edge_count = N - 1;
         uint64_t i = d_edges_input[thid];
 
         int u = i >> 32;  // Extract higher 32 bits
         int v = i & 0xFFFFFFFF; // Extract lower 32 bits
         
-        int afterRoot = thid > root;
-        d_edges_from[thid - afterRoot + edge_count] = d_edges_to[thid - afterRoot] = v;
-        d_edges_to[thid - afterRoot + edge_count] = d_edges_from[thid - afterRoot] = u;
+        int k = d_slot[thid];
+#ifdef BCC_GUARD_DUP
+        if (u >= N || v >= N || u < 0 || v < 0 || k < 0 || k >= half)
+            printf("[DUP] node %d (non-root) slot %d/%d parentEdge=%llx -> (%d,%d) N=%d\n",
+                   thid, k, half, (unsigned long long)i, u, v, N);
+#endif
+        d_edges_from[k + half] = d_edges_to[k] = v;
+        d_edges_to[k + half] = d_edges_from[k] = u;
     }
 }
 
@@ -94,6 +108,20 @@ void break_cycle_kernel(int *d_last, int *d_succ, int* d_roots, int roots_count,
             // Set the successor of the last edge to point to itself
             d_succ[rev_edge] = -1;
         }
+    }
+}
+
+// Shifts each component's locally-ranked arcs into its own slice of a shared
+// index space. Applied twice: with the ARC offsets before compute_level (which
+// scans over [0,E)), then by a further 2 per component for the POSITION space
+// that compute_first_last_occ writes into.
+__global__
+void shift_ranks(int *rank, const int *d_edges_from, const int *d_cid,
+                 const int *base, int per_comp, int E) {
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    if (tid < E) {
+        int c = d_cid[d_edges_from[tid]];
+        rank[tid] += (base ? base[c] : 0) + per_comp * c;
     }
 }
 
@@ -269,11 +297,18 @@ void compute_first_last_occ(
 }
 
 __global__ 
+// FOREST-CAPABLE. Every tree has its own root, and each root is seeded at both
+// ends of its component's POSITION block [pbase, pbase + 2*n_i). A component of
+// one vertex still gets a 2-wide block, so an isolated vertex ends up with a
+// valid degenerate interval and needs no special case downstream.
+__global__
 void init_arrays(
     int *d_next, int *d_parent, int *d_level,
     int *d_first, int *d_last, 
     int* d_first_occ, int* d_last_occ, 
-    int root, int E, int N) {
+    const int* d_croot, const int* d_cid,
+    const int* d_pbase, const int* d_csize,
+    int E, int N) {
 
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -289,24 +324,28 @@ void init_arrays(
         d_last[idx] = -1;
         d_level[idx] = 0;
 
-        if (idx == root) {
-            d_first_occ[idx] = 0;
-            d_last_occ[idx] = 2 * N - 1;
+        if (d_croot[idx]) {
+            int c = d_cid[idx];
+            d_first_occ[idx] = d_pbase[c];
+            d_last_occ[idx]  = d_pbase[c] + 2 * d_csize[c] - 1;
         } else {
-            d_first_occ[idx] = 2 * E;
+            d_first_occ[idx] = 2 * N;
             d_last_occ[idx] = -1;
         }
     }
 }
 
+// FOREST-CAPABLE. `c` is the number of trees in the spanning forest; the
+// per-component metadata (d_cid, d_croot, d_slot, d_abase, d_pbase, d_csize,
+// d_roots) is prepared by forest_metadata() in gpu_compress.cu.
 void cuda_euler_tour(
     int N, 
-    int root,
+    int c,
     GPU_BCG& g_bcg_ds) {
     
     uint64_t* d_edges_input = g_bcg_ds.d_parentEdge; 
-    int E = N * 2 - 2;
-    int roots_count = 1;
+    int E = 2 * (N - c);          // N-c tree edges, two arcs each
+    int roots_count = c;
 
     int *d_edges_to = g_bcg_ds.d_edges_to;
     int *d_edges_from = g_bcg_ds.d_edges_from;
@@ -322,10 +361,13 @@ void cuda_euler_tour(
     int *d_first_occ  =     g_bcg_ds.d_first_occ;
     int *d_last_occ   =     g_bcg_ds.d_last_occ;
 
-    CUDA_CHECK(cudaMemcpy(d_roots, &root, sizeof(int), cudaMemcpyHostToDevice), "Failed to copy root");
-
+    // d_roots already holds all c roots, filled by forest_metadata().
     int blockSize = 1024;
-    int numBlocks = (E + blockSize - 1) / blockSize;
+    // init_arrays guards on BOTH `idx < E` and `idx < N`, so it must be launched
+    // over max(E, N). With one tree E = 2N-2 > N and launching over E sufficed;
+    // on a FOREST E = 2(N-c) can be far smaller than N, and every node past the
+    // launch bound keeps garbage occurrences.
+    int numBlocks = ((E > N ? E : N) + blockSize - 1) / blockSize;
 
     init_arrays<<<numBlocks, blockSize>>>(
         d_next, 
@@ -335,18 +377,26 @@ void cuda_euler_tour(
         d_last,
         d_first_occ,
         d_last_occ,
-        root,
+        g_bcg_ds.d_croot, g_bcg_ds.d_cid,
+        g_bcg_ds.d_pbase, g_bcg_ds.d_csize,
         E, N);
 
     CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize init_arrays kernel");
 
-    numBlocks = (N - 1 + blockSize - 1) / blockSize; 
+    // N, not N-1: the kernel guards on `thid < N` and skips roots itself, so it
+    // needs the full [0, N) range. Launching N-1 threads drops node N-1 whenever
+    // N-1 is an exact multiple of blockSize -- its tree edge never enters the
+    // tour, the successor list closes into a cycle, and CudaSimpleListRank's
+    // pointer-jumping loop then never terminates.
+    numBlocks = (N + blockSize - 1) / blockSize;
     // Launch the kernel
     create_dup_edges<<<numBlocks, blockSize>>>(
         d_edges_to, 
         d_edges_from, 
         d_edges_input, 
-        root, 
+        g_bcg_ds.d_slot,
+        g_bcg_ds.d_croot,
+        E / 2,
         N);
 
     CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize create_dup_edges kernel");
@@ -410,6 +460,16 @@ void cuda_euler_tour(
         devRank, E, succ, 
         g_bcg_ds.notAllDone, g_bcg_ds.devRankNext, g_bcg_ds.devNotAllDone); // these 3 are auxilary ds
 
+    // Each tree was ranked independently and restarts at 0, so the c rankings
+    // collide. Shift each into its own ARC slice first -- compute_level reverses
+    // the ranks and prefix-sums over [0,E), so it needs contiguous per-component
+    // segments. Each tour is balanced (+1 down, -1 up), so the running sum
+    // returns to zero at every boundary and each root still comes out at level 0.
+    numBlocks = (E + blockSize - 1) / blockSize;
+    shift_ranks<<<numBlocks, blockSize>>>(
+        devRank, d_edges_from, g_bcg_ds.d_cid, g_bcg_ds.d_abase, 0, E);
+    CUCHECK(cudaDeviceSynchronize());
+
     #ifdef DEBUG
         std::cout << "d_first array:\n";
         print_device_array(d_first, N);
@@ -431,7 +491,49 @@ void cuda_euler_tour(
     find_parent<<<numBlocks, blockSize>>>(E, devRank, d_edges_to, d_edges_from, d_parent);
     CUCHECK(cudaDeviceSynchronize());
 
+    if (getenv("BCC_INV")) {
+        // O(N) structural check on the forest the tour just built: every
+        // non-root must have been given a parent, and exactly c roots must be
+        // marked. An "orphan" (non-root whose parent is itself) is what a
+        // non-converged list ranking looks like from here -- see the companion
+        // level check after compute_level.
+        std::vector<int> pa(N), cr(N);
+        CUCHECK(cudaMemcpy(pa.data(), d_parent,         N*4, cudaMemcpyDeviceToHost));
+        CUCHECK(cudaMemcpy(cr.data(), g_bcg_ds.d_croot, N*4, cudaMemcpyDeviceToHost));
+        int orphans = 0, orphan = -1, roots = 0;
+        for (int v = 0; v < N; ++v) {
+            roots += (cr[v] != 0);
+            if (!cr[v] && pa[v] == v) { if (orphan < 0) orphan = v; ++orphans; }
+        }
+        if (orphans || roots != c)
+            std::cout << "  [INV] N=" << N << " c=" << c << " E=" << E
+                      << " roots_marked=" << roots << " orphans=" << orphans
+                      << " first=" << orphan << "\n";
+    }
+
     compute_level(devRank, d_edges_from, d_edges_to, d_parent, g_bcg_ds.devW1Sum, g_bcg_ds.d_level, N, E);
+
+    if (getenv("BCC_INV")) {
+        // The direct precursor of the a1[-1] crash: level[v] must be
+        // level[parent[v]] + 1 for every non-root, and 0 at every root.
+        std::vector<int> lv(N), pa(N), cr(N), cid(N);
+        CUCHECK(cudaMemcpy(lv.data(), d_level,                N*4, cudaMemcpyDeviceToHost));
+        CUCHECK(cudaMemcpy(pa.data(), d_parent,               N*4, cudaMemcpyDeviceToHost));
+        CUCHECK(cudaMemcpy(cr.data(), g_bcg_ds.d_croot,       N*4, cudaMemcpyDeviceToHost));
+        CUCHECK(cudaMemcpy(cid.data(), g_bcg_ds.d_cid,        N*4, cudaMemcpyDeviceToHost));
+        int bad = 0, firstbad = -1;
+        for (int v = 0; v < N; ++v) {
+            bool ok = cr[v] ? (lv[v] == 0) : (pa[v] != v && lv[v] == lv[pa[v]] + 1);
+            if (!ok) { if (firstbad < 0) firstbad = v; ++bad; }
+        }
+        if (bad) {
+            std::cout << "  [LEVEL] N=" << N << " c=" << c << " E=" << E
+                      << "  bad_levels=" << bad << " first=" << firstbad
+                      << " (root=" << cr[firstbad] << " cid=" << cid[firstbad]
+                      << " level=" << lv[firstbad] << " parent=" << pa[firstbad]
+                      << " parent_level=" << lv[pa[firstbad]] << ")\n";
+        }
+    }
     
     #ifdef DEBUG
         std::cout << "Parent array:" << std::endl;
@@ -448,6 +550,14 @@ void cuda_euler_tour(
     //memset d_first_occ and d_last_occ
     //first_occ of root is 0
     //last_occ of root is E - 1
+
+    // Now from ARC space into POSITION space. A component owns 2*n_i positions
+    // but only 2*(n_i - 1) arcs; the extra 2 are the two its root occupies, so
+    // the two offset tables differ by exactly 2 per component.
+    numBlocks = (E + blockSize - 1) / blockSize;
+    shift_ranks<<<numBlocks, blockSize>>>(
+        devRank, d_edges_from, g_bcg_ds.d_cid, nullptr, 2, E);
+    CUCHECK(cudaDeviceSynchronize());
 
     numBlocks = (E + blockSize - 1) / blockSize;
     compute_first_last_occ<<<numBlocks, blockSize>>>(

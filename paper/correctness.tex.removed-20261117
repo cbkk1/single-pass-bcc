@@ -1,0 +1,54 @@
+% =====================================================================
+%  What Alg.~\ref{alg:fast} rests on.  Needs amsthm with environments
+%  named invariant / lemma / corollary, and the macros of algorithms.tex.
+% =====================================================================
+
+\begin{invariant}[Block persistence]\label{inv:blocks}
+After every batch, with $\nb$ the current block count: \textup{(i)} for
+every $x<\nb$, $M^{-1}(x)$ is the vertex set of a biconnected component of
+the prefix seen so far and $x$ is a \emph{single} node of $H$;
+\textup{(ii)} for every $x \ge \nb$, $|M^{-1}(x)| = 1$.
+\end{invariant}
+
+\noindent
+Part~(ii) is what makes the last line of Alg.~\ref{alg:sp} well defined;
+part~(i) is what lets the one-word test $x<\nb$ stand in for ``$x$ is a
+finished component''. A block, once formed, is never split:
+\textsc{De-Merge} removes a \emph{member} and gives it a fresh id above the
+watermark, leaving the block node intact.
+
+\begin{lemma}[Un-fencing merges at the parent]\label{lem:parent}
+Let $(c,p) \in T$ with $p=\pare(c)$, and let $l[x]$ be the class of $x$'s
+parent edge. Including $(c,p)$ in $G'$ forces $l[c]=l[p]$.
+\end{lemma}
+
+\begin{proof}
+Classes are read off the components of $G'$ at the deeper endpoint, so
+$l[x]=\mathit{rep}[x]$. Adding $(c,p)$ to $G'$ puts $c$ and $p$ in one
+component, hence $\mathit{rep}[c]=\mathit{rep}[p]$.
+\end{proof}
+
+\begin{corollary}[The predicate is forced]\label{cor:forced}
+Every edge at a block $B$ must take one class. By Lemma~\ref{lem:parent}
+the merge lands at the \emph{parent}, so $B$ must be the parent: the test is
+$\pare(e)<\nb$. $B$'s own up-edge needs no union: $B$ is the child there, so
+that edge already carries class $l[B]$ by definition of $l$.
+\end{corollary}
+
+\noindent
+This rules out the neighbouring predicates. Un-fencing \emph{the de-merge
+links} lets the arbitrary rooting of $T$ decide which endpoint is the
+parent, so the merge lands on the leaver whenever the leaver is rooted above
+the block; un-fencing \emph{every} tree edge at a block also un-fences $B$'s
+up-edge, whose merge lands at $\pare(B)$, typically a genuine cut vertex;
+and restricting to \emph{freshly} de-merged links is round-local while the
+link persists for the rest of the stream.
+
+\paragraph{Where $\nb$ is consulted.}
+Invariant~\ref{inv:blocks} is discharged at four comparisons against the
+watermark: in \textsc{Compress-Graph}, (1)~a class meeting a carried block
+is structural, so a block with one attachment is not demoted to an
+own-node, (2)~a carried block with no class of its own is still a block,
+(3)~an unclaimed id is an own-node iff it is not a carried block; and
+(4)~in \textsc{PlainEdges}, a tree edge whose parent is a carried block is
+never fenced.

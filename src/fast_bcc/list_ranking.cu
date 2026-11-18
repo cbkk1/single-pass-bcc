@@ -21,9 +21,14 @@ void updateRankNext(int loopsWithoutSync, unsigned long long *devRankNext, int *
 
         unsigned long long rankNext = devRankNext[thid];
         for (int i = 0; i < loopsWithoutSync; i++) {
-            if (thid == 0) 
-                *devNotAllDone = 0;
-
+            // The flag is cleared by the HOST before each launch, never here.
+            // Clearing it in-kernel from thread 0 races with the stores below:
+            // there is no synchronization inside this loop, so thread 0's clear
+            // at its iteration i can land AFTER another thread's store of 1 at
+            // its own i == loopsWithoutSync-1. The host then leaves the
+            // convergence loop with the ranks only partially jumped, and every
+            // consumer of devRank (find_parent, compute_level, first/last_occ)
+            // silently reads a non-ranking.
             int rank = rankNext >> 32;
             int nxt = rankNext - 1;
 
@@ -67,6 +72,7 @@ void CudaSimpleListRank(int *devRank, int N, int *devNext,
     const int loopsWithoutSync = 5;
 
     do {
+        CUCHECK(cudaMemset(devNotAllDone, 0, sizeof(int)));
         updateRankNext<<<numBlocks, threadsPerBlock>>>(loopsWithoutSync, devRankNext, devNotAllDone, N);
         CUCHECK(cudaDeviceSynchronize());
         CUCHECK(cudaMemcpy(notAllDone, devNotAllDone, sizeof(int), cudaMemcpyDeviceToHost));

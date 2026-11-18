@@ -1,0 +1,12 @@
+% Compile this to check the floats on their own:  pdflatex algorithms-standalone
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\renewcommand{\cite}[1]{[#1]}  % standalone stub
+\begin{document}
+\input{algorithms}
+\clearpage
+\input{results}
+\end{document}

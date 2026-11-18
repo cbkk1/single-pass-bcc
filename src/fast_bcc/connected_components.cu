@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cuda_runtime.h>
+#include <cstdlib>
 
 #include "utility/cuda_utility.cuh"
 #include "extern_bcc/extern_bcc.cuh"       
@@ -141,6 +142,138 @@ void union_find_gpu_repair(
     }
 }
 
+//---------------------------------------------------------------------
+// Fence-keep: the filter, moved INSIDE Fast_BCC.
+//
+// A block is ONE node here, so the de-merger gives a leaver a single link to
+// the block it left. That link looks exactly like a bridge to the fence test
+// (f_v <= low_u and l_v >= high_u both hold), so the test fires and cuts the
+// leaver off from a remnant it is genuinely 2-connected to -- it WAS a member
+// of that BCC. Compress-Graph's filter repairs this afterwards by unioning the
+// beta classes at the block node. This kernel instead declines to fence the
+// edge in the first place, which saves that whole pass.
+//
+//   mode 1 (blk) : never fence a tree edge with an endpoint < n_b_prev, i.e.
+//                  any tree edge at a carried block node. Every component
+//                  touching the block then fuses into one -- and cross edges
+//                  are unioned unconditionally anyway -- so this is exactly
+//                  what the filter does, one phase earlier.
+//   mode 4 (down): never fence a tree edge whose PARENT is a carried block.
+//                  Corrects mode 1. Un-fencing a tree edge (c,p) sets
+//                  l[c]=l[p], and by the LCH contract l[c] is the class of
+//                  c's parent edge (c,p) while l[p] is the class of p's
+//                  parent edge -- so the merge happens AT THE PARENT, pairing
+//                  its up-edge with that one down-edge. To fuse every edge at
+//                  a block B the block must therefore be the parent: then
+//                  every child c gets l[c]=l[B], and B's own up-edge needs no
+//                  union because beta(B,par(B)) = l[deeper] = l[B] already.
+//                  Mode 1 also un-fences B's up-edge (B as the child), whose
+//                  merge lands at par(B) -- an own node, often a genuine cut
+//                  vertex -- which is exactly the over-merge it suffers.
+//   mode 2 (new) : exempt ONLY this round's leaver links: one endpoint a
+//                  carried block (< n_b_prev), the other a freshly minted
+//                  leaver id (>= n_s_prev, since dense_mint_kernel hands out
+//                  ids from n_s upward). Strictly narrower than mode 1 -- it
+//                  does nothing for a block's attachments carried in from an
+//                  earlier round.
+//---------------------------------------------------------------------
+__global__
+void union_find_gpu_keepfence(
+    int numVert, int* temp_label,
+    int* d_parent, uint64_t* d_sf_edges,
+    int* d_first, int* d_last,
+    int* d_low, int* d_high,
+    int n_b_prev, int n_s_prev, int mode) {
+
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < numVert) {
+        int u = idx;
+        int v = d_parent[idx];
+        if (u == v) return;
+
+        bool keep;
+        if (mode == 1)      keep = (u < n_b_prev) || (v < n_b_prev);
+        else if (mode == 4) keep = (v < n_b_prev);   // parent is a block
+        else                keep = ((u < n_b_prev) && (v >= n_s_prev))
+                                || ((v < n_b_prev) && (u >= n_s_prev));
+
+        if (!keep) {
+            int f_u = d_first[u], l_u = d_last[u];
+            int f_v = d_first[v], l_v = d_last[v];
+            int low_u = d_low[u], high_u = d_high[u];
+            int low_v = d_low[v], high_v = d_high[v];
+            // the unmodified fence test
+            if ((f_u <= low_v and l_u >= high_v) or (f_v <= low_u and l_v >= high_u)) return;
+        }
+        union_async(idx, u, v, temp_label);
+
+    } else if (idx < 2 * numVert) {
+        int index = idx - numVert;
+        if (d_sf_edges[index] == INT_MAX) return;
+        // all these are cross-edges; so do CC for all
+        int u = (d_sf_edges[index] >> 32) & 0xFFFFFFFF;
+        int v = (d_sf_edges[index]) & 0xFFFFFFFF;
+        union_async(idx, u, v, temp_label);
+    }
+}
+
+// Which form of step 4 to use.  Returns -1 when BCC_FENCE_KEEP is UNSET,
+// meaning "use the default", which is mode 4 (down) -- see CC().  Setting it
+// to 0 / off selects the historical path: the stock fence test plus
+// Compress-Graph's filter.  Read once.
+//
+//   unset  -> -1 -> mode 4 (down), the default.  Filter OFF.
+//   down   ->  4   same, stated explicitly
+//   blk    ->  1   \
+//   new    ->  2    > refuted; kept so evidence/fence-keep-*.sh still runs
+//   skel   ->  3   /
+//   0|off  ->  0   stock fence test + Compress-Graph's filter (v2 behaviour)
+int bcc_fence_keep_mode() {
+    static int v = -2;
+    if (v < -1) {
+        const char* e = getenv("BCC_FENCE_KEEP");
+        v = !e ? -1 : (e[0] == 'b' ? 1 : (e[0] == 'n' ? 2 :
+                      (e[0] == 's' ? 3 : (e[0] == 'd' ? 4 : 0))));
+    }
+    return v;
+}
+
+// The mode actually used for a call with watermark nb_keep.  Factored out so
+// Compress-Graph can ask whether its filter is still needed.
+int bcc_fence_mode_resolved() {
+    int m = bcc_fence_keep_mode();
+    if (m < 0) m = 4;                       // DEFAULT: the block-aware rule
+    // These three predate the block-aware rule and all assume the stock step
+    // 4, so they force it rather than silently measuring something else.
+    if (getenv("BCC_NOFILTER")   || getenv("BCC_FILTER_LAST")
+     || getenv("BCC_FILTER_FROM") || getenv("BCC_PRED")
+     || getenv("BCC_END_REPAIR")) m = 0;
+    return m;
+}
+
+// n_s before this round's de-merger minted the leaver ids; set in demerge_dense.
+extern int g_bcc_n_s_prev;
+
+// Literal reading of "G' <- PLAINEDGES(T) u Fc u D": run the stock CC, then
+// add every de-merge link to the skeleton regardless of how the spanning tree
+// classified it. A leaver link is (L[u], mu) with L[u] >= n_s_prev (freshly
+// minted) and mu < n_b_prev (the block it left) -- dense_scatter_kernel.
+// Selected by BCC_FENCE_KEEP=skel. This exists to check that the cheaper
+// tree-edge-only exemption (mode "new") loses nothing: a de-merge link that is
+// a BACK edge already forces its tree path non-fence, and one that is a CROSS
+// edge is covered by the spanning forest Fc, so only the tree-edge case can
+// actually be fenced away.
+__global__
+void union_demerge_links_kernel(const uint64_t* d_edges, long m, int* temp_label,
+                                int n_b_prev, int n_s_prev) {
+    long i = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i >= m) return;
+    uint64_t e = d_edges[i];
+    int x = (int)(e >> 32), y = (int)(e & 0xFFFFFFFF);
+    bool link = ((x < n_b_prev) && (y >= n_s_prev)) || ((y < n_b_prev) && (x >= n_s_prev));
+    if (link) union_async(i, x, y, temp_label);
+}
+
 __global__ 
 void cc_gpu(int* label, int* temp_label, int V) {       
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -159,7 +292,11 @@ void init_parent_label(int* temp_label, int* label, int V) {
 }
 
 
-void CC(GPU_BCG& g_bcg_ds, const bool lastBatch) {
+// nb_keep is the BLOCK WATERMARK for step 4: node ids below it are carried
+// block nodes, each a finished BCC squashed to a single node.  A tree edge
+// whose PARENT is one of them is never fenced (Fast-BCC+ in the paper).
+// nb_keep = 0 disables the rule, which is what the legacy Fast_BCC path wants.
+void CC(GPU_BCG& g_bcg_ds, const bool lastBatch, const int nb_keep) {
 
     uint64_t* d_sf_edges = g_bcg_ds.d_index;
     int V                = g_bcg_ds.numVert;
@@ -186,7 +323,31 @@ void CC(GPU_BCG& g_bcg_ds, const bool lastBatch) {
     CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize init_parent_label_cc kernel");
 
     grid_size_final = CEIL(2*V, tb_size);
-    if(!lastBatch) {
+    const int fence_keep = nb_keep > 0 ? bcc_fence_mode_resolved() : 0;
+    if(fence_keep == 3 && !lastBatch) {
+        union_find_gpu_COO<<<grid_size_final, tb_size>>>(
+            V, temp_label,
+            d_parent, d_sf_edges,
+            d_first, d_last,
+            d_low, d_high);
+        CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize union_find_gpu_COO (skel)");
+        if (g_bcg_ds.numEdges > 0) {
+            union_demerge_links_kernel<<<CEIL(g_bcg_ds.numEdges, tb_size), tb_size>>>(
+                g_bcg_ds.updated_edgelist, g_bcg_ds.numEdges, temp_label,
+                nb_keep, g_bcc_n_s_prev);
+            CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize union_demerge_links kernel");
+        }
+    }
+    else if(fence_keep && !lastBatch) {
+        union_find_gpu_keepfence<<<grid_size_final, tb_size>>>(
+            V, temp_label,
+            d_parent, d_sf_edges,
+            d_first, d_last,
+            d_low, d_high,
+            nb_keep, g_bcc_n_s_prev, fence_keep);
+        CUDA_CHECK(cudaDeviceSynchronize(), "Failed to synchronize union_find_gpu_keepfence kernel");
+    }
+    else if(!lastBatch) {
         union_find_gpu_COO<<<grid_size_final, tb_size>>>(
             V, temp_label, 
             d_parent, d_sf_edges,

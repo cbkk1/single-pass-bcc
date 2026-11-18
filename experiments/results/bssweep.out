@@ -1,0 +1,343 @@
+###### ours (default + filter) 2026-11-15 16:24:13
+=== full experiment  reps=3  bs={125000 250000 500000 1000000 2000000 4000000 8000000}  tmo=1800s  csv=experiments/results/bssweep.csv
+=== started 2026-11-15 16:24:13
+  uk-2002                bs=125000    default   rep1  ok        42334 ms      47.9 s  bcc=2583923
+  uk-2002                bs=125000    default   rep2  ok        42160 ms      47.8 s  bcc=2583923
+  uk-2002                bs=125000    default   rep3  ok        42388 ms      48.0 s  bcc=2583923
+  uk-2002                bs=125000    0         rep1  ok        44562 ms      50.3 s  bcc=2583923
+  uk-2002                bs=125000    0         rep2  ok        44795 ms      50.7 s  bcc=2583923
+  uk-2002                bs=125000    0         rep3  ok        44611 ms      50.2 s  bcc=2583923
+  uk-2002                bs=250000    default   rep1  ok        21453 ms      27.1 s  bcc=2583923
+  uk-2002                bs=250000    default   rep2  ok        21463 ms      27.2 s  bcc=2583923
+  uk-2002                bs=250000    default   rep3  ok        21449 ms      27.3 s  bcc=2583923
+  uk-2002                bs=250000    0         rep1  ok        22632 ms      28.3 s  bcc=2583923
+  uk-2002                bs=250000    0         rep2  ok        22790 ms      28.5 s  bcc=2583923
+  uk-2002                bs=250000    0         rep3  ok        22650 ms      28.2 s  bcc=2583923
+  uk-2002                bs=500000    default   rep1  ok        10868 ms      16.5 s  bcc=2583923
+  uk-2002                bs=500000    default   rep2  ok        10880 ms      16.7 s  bcc=2583923
+  uk-2002                bs=500000    default   rep3  ok        10876 ms      16.5 s  bcc=2583923
+  uk-2002                bs=500000    0         rep1  ok        11639 ms      17.2 s  bcc=2583923
+  uk-2002                bs=500000    0         rep2  ok        11667 ms      17.3 s  bcc=2583923
+  uk-2002                bs=500000    0         rep3  ok        11498 ms      17.6 s  bcc=2583923
+  uk-2002                bs=1000000   default   rep1  ok         5772 ms      11.2 s  bcc=2583923
+  uk-2002                bs=1000000   default   rep2  ok         5732 ms      11.3 s  bcc=2583923
+  uk-2002                bs=1000000   default   rep3  ok         5747 ms      11.1 s  bcc=2583923
+  uk-2002                bs=1000000   0         rep1  ok         6132 ms      11.4 s  bcc=2583923
+  uk-2002                bs=1000000   0         rep2  ok         6289 ms      11.6 s  bcc=2583923
+  uk-2002                bs=1000000   0         rep3  ok         6279 ms      11.8 s  bcc=2583923
+  uk-2002                bs=2000000   default   rep1  ok         3095 ms       8.5 s  bcc=2583923
+  uk-2002                bs=2000000   default   rep2  ok         2962 ms       8.7 s  bcc=2583923
+  uk-2002                bs=2000000   default   rep3  ok         3102 ms       8.7 s  bcc=2583923
+  uk-2002                bs=2000000   0         rep1  ok         3382 ms       8.7 s  bcc=2583923
+  uk-2002                bs=2000000   0         rep2  ok         3379 ms       8.9 s  bcc=2583923
+  uk-2002                bs=2000000   0         rep3  ok         3371 ms       9.9 s  bcc=2583923
+  uk-2002                bs=4000000   default   rep1  ok         1694 ms       7.0 s  bcc=2583923
+  uk-2002                bs=4000000   default   rep2  ok         1693 ms       7.0 s  bcc=2583923
+  uk-2002                bs=4000000   default   rep3  ok         1689 ms       7.0 s  bcc=2583923
+  uk-2002                bs=4000000   0         rep1  ok         1897 ms       7.4 s  bcc=2583923
+  uk-2002                bs=4000000   0         rep2  ok         2053 ms       7.9 s  bcc=2583923
+  uk-2002                bs=4000000   0         rep3  ok         2057 ms       7.7 s  bcc=2583923
+  uk-2002                bs=8000000   default   rep1  ok         1121 ms       6.7 s  bcc=2583923
+  uk-2002                bs=8000000   default   rep2  ok         1115 ms       6.8 s  bcc=2583923
+  uk-2002                bs=8000000   default   rep3  ok         1122 ms       6.6 s  bcc=2583923
+  uk-2002                bs=8000000   0         rep1  ok         1293 ms       6.9 s  bcc=2583923
+  uk-2002                bs=8000000   0         rep2  ok         1456 ms       7.0 s  bcc=2583923
+  uk-2002                bs=8000000   0         rep3  ok         1288 ms       6.9 s  bcc=2583923
+  europe_osm             bs=125000    default   rep1  ok        32746 ms      45.5 s  bcc=11502742
+  europe_osm             bs=125000    default   rep2  ok        32735 ms      45.4 s  bcc=11502742
+  europe_osm             bs=125000    default   rep3  ok        32581 ms      45.2 s  bcc=11502742
+  europe_osm             bs=125000    0         rep1  ok        34801 ms      47.2 s  bcc=11502742
+  europe_osm             bs=125000    0         rep2  ok        34680 ms      48.1 s  bcc=11502742
+  europe_osm             bs=125000    0         rep3  ok        34583 ms      47.6 s  bcc=11502742
+  europe_osm             bs=250000    default   rep1  ok        16539 ms      29.5 s  bcc=11502742
+  europe_osm             bs=250000    default   rep2  ok        16511 ms      29.3 s  bcc=11502742
+  europe_osm             bs=250000    default   rep3  ok        16384 ms      29.1 s  bcc=11502742
+  europe_osm             bs=250000    0         rep1  ok        17532 ms      30.4 s  bcc=11502742
+  europe_osm             bs=250000    0         rep2  ok        17618 ms      31.4 s  bcc=11502742
+  europe_osm             bs=250000    0         rep3  ok        17540 ms      30.6 s  bcc=11502742
+  europe_osm             bs=500000    default   rep1  ok         8449 ms      21.4 s  bcc=11502742
+  europe_osm             bs=500000    default   rep2  ok         8427 ms      21.1 s  bcc=11502742
+  europe_osm             bs=500000    default   rep3  ok         8411 ms      21.2 s  bcc=11502742
+  europe_osm             bs=500000    0         rep1  ok         9027 ms      22.1 s  bcc=11502742
+  europe_osm             bs=500000    0         rep2  ok         8872 ms      22.0 s  bcc=11502742
+  europe_osm             bs=500000    0         rep3  ok         8880 ms      22.0 s  bcc=11502742
+  europe_osm             bs=1000000   default   rep1  ok         4466 ms      17.4 s  bcc=11502742
+  europe_osm             bs=1000000   default   rep2  ok         4432 ms      16.6 s  bcc=11502742
+  europe_osm             bs=1000000   default   rep3  ok         4466 ms      18.0 s  bcc=11502742
+  europe_osm             bs=1000000   0         rep1  ok         4673 ms      17.9 s  bcc=11502742
+  europe_osm             bs=1000000   0         rep2  ok         4704 ms      18.9 s  bcc=11502742
+  europe_osm             bs=1000000   0         rep3  ok         4687 ms      18.3 s  bcc=11502742
+  europe_osm             bs=2000000   default   rep1  ok         2410 ms      15.6 s  bcc=11502742
+  europe_osm             bs=2000000   default   rep2  ok         2399 ms      15.2 s  bcc=11502742
+  europe_osm             bs=2000000   default   rep3  ok         2402 ms      15.2 s  bcc=11502742
+  europe_osm             bs=2000000   0         rep1  ok         2521 ms      16.2 s  bcc=11502742
+  europe_osm             bs=2000000   0         rep2  ok         2510 ms      15.2 s  bcc=11502742
+  europe_osm             bs=2000000   0         rep3  ok         2526 ms      15.6 s  bcc=11502742
+  europe_osm             bs=4000000   default   rep1  ok         1482 ms      14.0 s  bcc=11502742
+  europe_osm             bs=4000000   default   rep2  ok         1337 ms      13.8 s  bcc=11502742
+  europe_osm             bs=4000000   default   rep3  ok         1330 ms      13.8 s  bcc=11502742
+  europe_osm             bs=4000000   0         rep1  ok         1396 ms      13.9 s  bcc=11502742
+  europe_osm             bs=4000000   0         rep2  ok         1390 ms      13.9 s  bcc=11502742
+  europe_osm             bs=4000000   0         rep3  ok         1562 ms      14.9 s  bcc=11502742
+  europe_osm             bs=8000000   default   rep1  oom             ms       1.4 s  bcc=?
+     retry once
+  europe_osm             bs=8000000   default   rep1  oom             ms       1.3 s  bcc=?
+  europe_osm             bs=8000000   default   rep2  oom             ms       1.3 s  bcc=?
+     retry once
+  europe_osm             bs=8000000   default   rep2  oom             ms       1.3 s  bcc=?
+  europe_osm             bs=8000000   default   rep3  oom             ms       1.3 s  bcc=?
+     retry once
+  europe_osm             bs=8000000   default   rep3  oom             ms       1.2 s  bcc=?
+  europe_osm             bs=8000000   0         rep1  oom             ms       1.4 s  bcc=?
+     retry once
+  europe_osm             bs=8000000   0         rep1  oom             ms       1.3 s  bcc=?
+  europe_osm             bs=8000000   0         rep2  oom             ms       1.4 s  bcc=?
+     retry once
+  europe_osm             bs=8000000   0         rep2  oom             ms       1.3 s  bcc=?
+  europe_osm             bs=8000000   0         rep3  oom             ms       1.3 s  bcc=?
+     retry once
+  europe_osm             bs=8000000   0         rep3  oom             ms       1.2 s  bcc=?
+  rgg_n_2_24_s0          bs=125000    default   rep1  ok         8329 ms      10.6 s  bcc=70
+  rgg_n_2_24_s0          bs=125000    default   rep2  ok         8276 ms      10.5 s  bcc=70
+  rgg_n_2_24_s0          bs=125000    default   rep3  ok         8347 ms      10.7 s  bcc=70
+  rgg_n_2_24_s0          bs=125000    0         rep1  ok         8701 ms      10.9 s  bcc=70
+  rgg_n_2_24_s0          bs=125000    0         rep2  ok         8671 ms      11.2 s  bcc=70
+  rgg_n_2_24_s0          bs=125000    0         rep3  ok         8801 ms      11.2 s  bcc=70
+  rgg_n_2_24_s0          bs=250000    default   rep1  ok         4313 ms       6.5 s  bcc=70
+  rgg_n_2_24_s0          bs=250000    default   rep2  ok         4519 ms       7.0 s  bcc=70
+  rgg_n_2_24_s0          bs=250000    default   rep3  ok         4487 ms       6.9 s  bcc=70
+  rgg_n_2_24_s0          bs=250000    0         rep1  ok         4717 ms       7.2 s  bcc=70
+  rgg_n_2_24_s0          bs=250000    0         rep2  ok         4530 ms       7.2 s  bcc=70
+  rgg_n_2_24_s0          bs=250000    0         rep3  ok         4715 ms       7.0 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    default   rep1  ok         2385 ms       4.7 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    default   rep2  ok         2371 ms       4.7 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    default   rep3  ok         2375 ms       4.7 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    0         rep1  ok         2529 ms       4.8 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    0         rep2  ok         2689 ms       4.9 s  bcc=70
+  rgg_n_2_24_s0          bs=500000    0         rep3  ok         2556 ms       4.8 s  bcc=70
+  rgg_n_2_24_s0          bs=1000000   default   rep1  ok         1340 ms       3.6 s  bcc=70
+  rgg_n_2_24_s0          bs=1000000   default   rep2  ok         1337 ms       4.0 s  bcc=70
+  rgg_n_2_24_s0          bs=1000000   default   rep3  ok         1341 ms       3.7 s  bcc=70
+  rgg_n_2_24_s0          bs=1000000   0         rep1  ok         1611 ms       3.9 s  bcc=70
+  rgg_n_2_24_s0          bs=1000000   0         rep2  ok         1452 ms       3.7 s  bcc=70
+  rgg_n_2_24_s0          bs=1000000   0         rep3  ok         1460 ms       4.0 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   default   rep1  ok          881 ms       3.1 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   default   rep2  ok          878 ms       3.2 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   default   rep3  ok          718 ms       3.0 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   0         rep1  ok          980 ms       3.5 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   0         rep2  ok          976 ms       3.5 s  bcc=70
+  rgg_n_2_24_s0          bs=2000000   0         rep3  ok          975 ms       3.6 s  bcc=70
+  rgg_n_2_24_s0          bs=4000000   default   rep1  ok          616 ms       2.9 s  bcc=70
+  rgg_n_2_24_s0          bs=4000000   default   rep2  ok          459 ms       2.9 s  bcc=70
+  rgg_n_2_24_s0          bs=4000000   default   rep3  ok          609 ms       2.9 s  bcc=70
+  rgg_n_2_24_s0          bs=4000000   0         rep1  ok          550 ms       2.9 s  bcc=70
+  rgg_n_2_24_s0          bs=4000000   0         rep2  ok          706 ms       3.1 s  bcc=70
+  rgg_n_2_24_s0          bs=4000000   0         rep3  ok          708 ms       3.1 s  bcc=70
+  rgg_n_2_24_s0          bs=8000000   default   rep1  ok          353 ms       2.7 s  bcc=70
+  rgg_n_2_24_s0          bs=8000000   default   rep2  ok          356 ms       2.8 s  bcc=70
+  rgg_n_2_24_s0          bs=8000000   default   rep3  ok          507 ms       2.8 s  bcc=70
+  rgg_n_2_24_s0          bs=8000000   0         rep1  ok          441 ms       2.8 s  bcc=70
+  rgg_n_2_24_s0          bs=8000000   0         rep2  ok          588 ms       3.1 s  bcc=70
+  rgg_n_2_24_s0          bs=8000000   0         rep3  ok          440 ms       2.9 s  bcc=70
+  in-2004                bs=125000    default   rep1  ok          306 ms       1.0 s  bcc=299221
+  in-2004                bs=125000    default   rep2  ok          378 ms       1.2 s  bcc=299221
+  in-2004                bs=125000    default   rep3  ok          304 ms       0.8 s  bcc=299221
+  in-2004                bs=125000    0         rep1  ok          315 ms       0.9 s  bcc=299221
+  in-2004                bs=125000    0         rep2  ok          317 ms       1.1 s  bcc=299221
+  in-2004                bs=125000    0         rep3  ok          432 ms       1.7 s  bcc=299221
+  in-2004                bs=250000    default   rep1  ok          159 ms       0.8 s  bcc=299221
+  in-2004                bs=250000    default   rep2  ok          158 ms       0.9 s  bcc=299221
+  in-2004                bs=250000    default   rep3  ok          319 ms       0.9 s  bcc=299221
+  in-2004                bs=250000    0         rep1  ok          167 ms       0.9 s  bcc=299221
+  in-2004                bs=250000    0         rep2  ok          166 ms       0.7 s  bcc=299221
+  in-2004                bs=250000    0         rep3  ok          167 ms       0.9 s  bcc=299221
+  in-2004                bs=500000    default   rep1  ok          247 ms       0.8 s  bcc=299221
+  in-2004                bs=500000    default   rep2  ok           90 ms       0.6 s  bcc=299221
+  in-2004                bs=500000    default   rep3  ok           91 ms       0.7 s  bcc=299221
+  in-2004                bs=500000    0         rep1  ok           98 ms       0.7 s  bcc=299221
+  in-2004                bs=500000    0         rep2  ok           98 ms       0.7 s  bcc=299221
+  in-2004                bs=500000    0         rep3  ok           99 ms       0.9 s  bcc=299221
+  in-2004                bs=1000000   default   rep1  ok           54 ms       0.7 s  bcc=299221
+  in-2004                bs=1000000   default   rep2  ok           54 ms       0.6 s  bcc=299221
+  in-2004                bs=1000000   default   rep3  ok           53 ms       0.8 s  bcc=299221
+  in-2004                bs=1000000   0         rep1  ok           61 ms       0.8 s  bcc=299221
+  in-2004                bs=1000000   0         rep2  ok           60 ms       0.6 s  bcc=299221
+  in-2004                bs=1000000   0         rep3  ok           60 ms       0.8 s  bcc=299221
+  in-2004                bs=2000000   default   rep1  ok           35 ms       0.7 s  bcc=299221
+  in-2004                bs=2000000   default   rep2  ok           36 ms       0.6 s  bcc=299221
+  in-2004                bs=2000000   default   rep3  ok           36 ms       0.6 s  bcc=299221
+  in-2004                bs=2000000   0         rep1  ok           41 ms       0.6 s  bcc=299221
+  in-2004                bs=2000000   0         rep2  ok           42 ms       0.8 s  bcc=299221
+  in-2004                bs=2000000   0         rep3  ok           41 ms       0.8 s  bcc=299221
+  in-2004                bs=4000000   default   rep1  ok           25 ms       0.6 s  bcc=299221
+  in-2004                bs=4000000   default   rep2  ok           27 ms       0.8 s  bcc=299221
+  in-2004                bs=4000000   default   rep3  ok           25 ms       0.8 s  bcc=299221
+  in-2004                bs=4000000   0         rep1  ok           30 ms       0.6 s  bcc=299221
+  in-2004                bs=4000000   0         rep2  ok           30 ms       0.8 s  bcc=299221
+  in-2004                bs=4000000   0         rep3  ok           30 ms       0.8 s  bcc=299221
+  in-2004                bs=8000000   default   rep1  ok           22 ms       0.6 s  bcc=299221
+  in-2004                bs=8000000   default   rep2  ok           23 ms       0.8 s  bcc=299221
+  in-2004                bs=8000000   default   rep3  ok           22 ms       0.9 s  bcc=299221
+  in-2004                bs=8000000   0         rep1  ok           25 ms       0.6 s  bcc=299221
+  in-2004                bs=8000000   0         rep2  ok           25 ms       0.8 s  bcc=299221
+  in-2004                bs=8000000   0         rep3  ok           25 ms       0.8 s  bcc=299221
+  eu-2005                bs=125000    default   rep1  ok          301 ms       0.7 s  bcc=53013
+  eu-2005                bs=125000    default   rep2  ok          302 ms       0.9 s  bcc=53013
+  eu-2005                bs=125000    default   rep3  ok          461 ms       0.9 s  bcc=53013
+  eu-2005                bs=125000    0         rep1  ok          315 ms       0.9 s  bcc=53013
+  eu-2005                bs=125000    0         rep2  ok          315 ms       0.7 s  bcc=53013
+  eu-2005                bs=125000    0         rep3  ok          405 ms       1.1 s  bcc=53013
+  eu-2005                bs=250000    default   rep1  ok          160 ms       0.7 s  bcc=53013
+  eu-2005                bs=250000    default   rep2  ok          160 ms       0.6 s  bcc=53013
+  eu-2005                bs=250000    default   rep3  ok          161 ms       0.6 s  bcc=53013
+  eu-2005                bs=250000    0         rep1  ok          169 ms       0.7 s  bcc=53013
+  eu-2005                bs=250000    0         rep2  ok          170 ms       0.6 s  bcc=53013
+  eu-2005                bs=250000    0         rep3  ok          172 ms       0.8 s  bcc=53013
+  eu-2005                bs=500000    default   rep1  ok          122 ms       0.8 s  bcc=53013
+  eu-2005                bs=500000    default   rep2  ok           90 ms       0.5 s  bcc=53013
+  eu-2005                bs=500000    default   rep3  ok          255 ms       0.7 s  bcc=53013
+  eu-2005                bs=500000    0         rep1  ok          101 ms       0.6 s  bcc=53013
+  eu-2005                bs=500000    0         rep2  ok          116 ms       0.8 s  bcc=53013
+  eu-2005                bs=500000    0         rep3  ok          265 ms       0.8 s  bcc=53013
+  eu-2005                bs=1000000   default   rep1  ok           54 ms       0.5 s  bcc=53013
+  eu-2005                bs=1000000   default   rep2  ok           53 ms       0.7 s  bcc=53013
+  eu-2005                bs=1000000   default   rep3  ok           54 ms       0.5 s  bcc=53013
+  eu-2005                bs=1000000   0         rep1  ok           61 ms       0.7 s  bcc=53013
+  eu-2005                bs=1000000   0         rep2  ok           62 ms       0.5 s  bcc=53013
+  eu-2005                bs=1000000   0         rep3  ok           67 ms       0.6 s  bcc=53013
+  eu-2005                bs=2000000   default   rep1  ok           38 ms       0.5 s  bcc=53013
+  eu-2005                bs=2000000   default   rep2  ok           39 ms       0.5 s  bcc=53013
+  eu-2005                bs=2000000   default   rep3  ok           45 ms       0.8 s  bcc=53013
+  eu-2005                bs=2000000   0         rep1  ok           46 ms       0.5 s  bcc=53013
+  eu-2005                bs=2000000   0         rep2  ok          201 ms       0.7 s  bcc=53013
+  eu-2005                bs=2000000   0         rep3  ok           46 ms       0.5 s  bcc=53013
+  eu-2005                bs=4000000   default   rep1  ok           27 ms       0.7 s  bcc=53013
+  eu-2005                bs=4000000   default   rep2  ok           27 ms       0.5 s  bcc=53013
+  eu-2005                bs=4000000   default   rep3  ok           27 ms       0.7 s  bcc=53013
+  eu-2005                bs=4000000   0         rep1  ok           33 ms       0.5 s  bcc=53013
+  eu-2005                bs=4000000   0         rep2  ok           33 ms       0.7 s  bcc=53013
+  eu-2005                bs=4000000   0         rep3  ok           33 ms       0.5 s  bcc=53013
+  eu-2005                bs=8000000   default   rep1  ok           26 ms       0.6 s  bcc=53013
+  eu-2005                bs=8000000   default   rep2  ok           26 ms       0.5 s  bcc=53013
+  eu-2005                bs=8000000   default   rep3  ok           26 ms       0.6 s  bcc=53013
+  eu-2005                bs=8000000   0         rep1  ok           30 ms       0.5 s  bcc=53013
+  eu-2005                bs=8000000   0         rep2  ok           30 ms       0.5 s  bcc=53013
+  eu-2005                bs=8000000   0         rep3  ok           30 ms       0.6 s  bcc=53013
+  higgs-twitter          bs=125000    default   rep1  ok          185 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=125000    default   rep2  ok          185 ms       0.7 s  bcc=24910
+  higgs-twitter          bs=125000    default   rep3  ok          188 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=125000    0         rep1  ok          349 ms       0.7 s  bcc=24910
+  higgs-twitter          bs=125000    0         rep2  ok          193 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=125000    0         rep3  ok          203 ms       0.8 s  bcc=24910
+  higgs-twitter          bs=250000    default   rep1  ok           99 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=250000    default   rep2  ok           99 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=250000    default   rep3  ok           99 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=250000    0         rep1  ok          104 ms       0.7 s  bcc=24910
+  higgs-twitter          bs=250000    0         rep2  ok          103 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=250000    0         rep3  ok          101 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=500000    default   rep1  ok           56 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=500000    default   rep2  ok           55 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=500000    default   rep3  ok           68 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=500000    0         rep1  ok           56 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=500000    0         rep2  ok           62 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=500000    0         rep3  ok           56 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=1000000   default   rep1  ok           32 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=1000000   default   rep2  ok          199 ms       0.7 s  bcc=24910
+  higgs-twitter          bs=1000000   default   rep3  ok           36 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=1000000   0         rep1  ok           38 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=1000000   0         rep2  ok           34 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=1000000   0         rep3  ok           34 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=2000000   default   rep1  ok           23 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=2000000   default   rep2  ok           23 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=2000000   default   rep3  ok           23 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=2000000   0         rep1  ok           24 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=2000000   0         rep2  ok          179 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=2000000   0         rep3  ok           25 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=4000000   default   rep1  ok           16 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=4000000   default   rep2  ok           16 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=4000000   default   rep3  ok           18 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=4000000   0         rep1  ok           17 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=4000000   0         rep2  ok           17 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=4000000   0         rep3  ok           17 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=8000000   default   rep1  ok           16 ms       0.4 s  bcc=24910
+  higgs-twitter          bs=8000000   default   rep2  ok           16 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=8000000   default   rep3  ok           16 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=8000000   0         rep1  ok           16 ms       0.6 s  bcc=24910
+  higgs-twitter          bs=8000000   0         rep2  ok           16 ms       0.5 s  bcc=24910
+  higgs-twitter          bs=8000000   0         rep3  ok           16 ms       0.6 s  bcc=24910
+=== finished 2026-11-15 16:57:01
+###### two-pass baseline 2026-11-15 16:57:01
+=== two-pass baseline  reps=3  bs={125000 250000 500000 1000000 2000000 4000000 8000000}  bin=../AbhijeethBaseline/External-BCC-for-GPU/build/External_BCC
+=== started 2026-11-15 16:57:01
+  uk-2002                bs=125000    rep1  crash           ms (st 125)     40.7 s  bcc=?
+     retry once
+  uk-2002                bs=125000    rep1  crash           ms (st 127)     44.7 s  bcc=?
+  uk-2002                bs=125000    rep2  crash           ms (st 128)     41.1 s  bcc=?
+     retry once
+  uk-2002                bs=125000    rep2  crash           ms (st 128)     95.7 s  bcc=?
+  uk-2002                bs=125000    rep3  timeout         ms (st 127)   1800.5 s  bcc=?
+     retry once
+  uk-2002                bs=125000    rep3  crash           ms (st 127)     68.6 s  bcc=?
+  uk-2002                bs=250000    rep1  ok        45924 ms (st 111)     49.3 s  bcc=2583923
+  uk-2002                bs=250000    rep2  ok        46068 ms (st 113)     49.5 s  bcc=2583923
+  uk-2002                bs=250000    rep3  ok        47063 ms (st 113)     50.5 s  bcc=2583923
+  uk-2002                bs=500000    rep1  ok        23298 ms (st 104)     26.7 s  bcc=2583923
+  uk-2002                bs=500000    rep2  crash           ms (st 105)      6.9 s  bcc=?
+     retry once
+  uk-2002                bs=500000    rep2  ok        23758 ms (st 100)     27.4 s  bcc=2583923
+  uk-2002                bs=500000    rep3  crash           ms (st 104)     25.0 s  bcc=?
+     retry once
+  uk-2002                bs=500000    rep3  timeout         ms (st 104)   1800.8 s  bcc=?
+  uk-2002                bs=1000000   rep1  ok        11872 ms (st 96)     16.3 s  bcc=2583923
+  uk-2002                bs=1000000   rep2  crash           ms (st 96)      5.0 s  bcc=?
+     retry once
+  uk-2002                bs=1000000   rep2  crash           ms (st 101)     14.2 s  bcc=?
+  uk-2002                bs=1000000   rep3  ok        11861 ms (st 100)     15.4 s  bcc=2583923
+  uk-2002                bs=2000000   rep1  ok         6130 ms (st 95)      9.6 s  bcc=2583923
+  uk-2002                bs=2000000   rep2  timeout         ms (st 94)   1800.6 s  bcc=?
+     retry once
+  uk-2002                bs=2000000   rep2  ok         6303 ms (st 94)      9.6 s  bcc=2583923
+  uk-2002                bs=2000000   rep3  ok         6170 ms (st 94)      9.7 s  bcc=2583923
+  uk-2002                bs=4000000   rep1  ok         3347 ms (st 94)      6.8 s  bcc=2583923
+  uk-2002                bs=4000000   rep2  ok         3136 ms (st 93)      6.8 s  bcc=2583923
+  uk-2002                bs=4000000   rep3  ok         3321 ms (st 96)      7.0 s  bcc=2583923
+  uk-2002                bs=8000000   rep1  ok         1951 ms (st 94)      5.6 s  bcc=2583923
+  uk-2002                bs=8000000   rep2  ok         1924 ms (st 92)      5.6 s  bcc=2583923
+  uk-2002                bs=8000000   rep3  ok         1749 ms (st 94)      5.2 s  bcc=2583923
+  europe_osm             bs=125000    rep1  timeout         ms (st 51)   1800.2 s  bcc=?
+     retry once
+  europe_osm             bs=125000    rep1  ok        69301 ms (st 51)     71.6 s  bcc=11502742
+  europe_osm             bs=125000    rep2  ok        69481 ms (st 51)     71.7 s  bcc=11502742
+  europe_osm             bs=125000    rep3  ok        69605 ms (st 51)     71.8 s  bcc=11502742
+  europe_osm             bs=250000    rep1  ok        34530 ms (st 38)     37.0 s  bcc=11502742
+  europe_osm             bs=250000    rep2  crash           ms (st 39)     15.5 s  bcc=?
+     retry once
+  europe_osm             bs=250000    rep2  ok        34647 ms (st 38)     37.2 s  bcc=11502742
+  europe_osm             bs=250000    rep3  crash           ms (st 38)      6.4 s  bcc=?
+     retry once
+  europe_osm             bs=250000    rep3  ok        34580 ms (st 38)     37.0 s  bcc=11502742
+  europe_osm             bs=500000    rep1  ok        17412 ms (st 32)     19.9 s  bcc=11502742
+  europe_osm             bs=500000    rep2  ok        17644 ms (st 32)     20.2 s  bcc=11502742
+  europe_osm             bs=500000    rep3  ok        17489 ms (st 32)     20.2 s  bcc=11502742
+  europe_osm             bs=1000000   rep1  ok         8785 ms (st 28)     11.6 s  bcc=11502742
+  europe_osm             bs=1000000   rep2  ok         8772 ms (st 28)     11.1 s  bcc=11502742
+  europe_osm             bs=1000000   rep3  ok         8795 ms (st 28)     11.1 s  bcc=11502742
+  europe_osm             bs=2000000   rep1  ok         4559 ms (st 31)      7.1 s  bcc=11502742
+  europe_osm             bs=2000000   rep2  ok         4566 ms (st 26)      7.0 s  bcc=11502742
+  europe_osm             bs=2000000   rep3  ok         4557 ms (st 26)      7.0 s  bcc=11502742
+  europe_osm             bs=4000000   rep1  ok         2326 ms (st 26)      4.6 s  bcc=11502742
+  europe_osm             bs=4000000   rep2  ok         2331 ms (st 26)      4.9 s  bcc=11502742
+  europe_osm             bs=4000000   rep3  ok         2349 ms (st 26)      4.8 s  bcc=11502742
+  europe_osm             bs=8000000   rep1  ok         1219 ms (st 25)      3.7 s  bcc=11502742
+  europe_osm             bs=8000000   rep2  ok         1221 ms (st 25)      3.8 s  bcc=11502742
+  europe_osm             bs=8000000   rep3  ok         1228 ms (st 25)      4.3 s  bcc=11502742
+  rgg_n_2_24_s0          bs=125000    rep1  crash           ms (st 77)     20.1 s  bcc=?
+     retry once
+  rgg_n_2_24_s0          bs=125000    rep1  ok        41891 ms (st 73)     43.9 s  bcc=70
+  rgg_n_2_24_s0          bs=125000    rep2  timeout         ms (st 74)   1800.3 s  bcc=?
+     retry once
+  rgg_n_2_24_s0          bs=125000    rep2  timeout         ms (st 72)   1800.5 s  bcc=?
+  rgg_n_2_24_s0          bs=125000    rep3  timeout         ms (st 73)   1800.4 s  bcc=?
+     retry once
+  rgg_n_2_24_s0          bs=125000    rep3  timeout         ms (st 73)   1800.5 s  bcc=?
+  rgg_n_2_24_s0          bs=250000    rep1  ok        21253 ms (st 65)     23.2 s  bcc=70

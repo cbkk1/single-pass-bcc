@@ -20,8 +20,9 @@
 //---------------------------------------------------------------------
 // Biconnected Components (BCC) related functions
 //---------------------------------------------------------------------
-#include "extern_bcc/extern_bcc.cuh"       
+#include "extern_bcc/extern_bcc.cuh"
 #include "extern_bcc/bcg_memory_utils.cuh"
+#include "extern_bcc/serial_bcc.cuh"
 
 
 //---------------------------------------------------------------------
@@ -30,6 +31,7 @@
 
 bool    checker             = false;
 bool    g_verbose           = false;  // Whether to display i/o to console
+bool    g_gpu_bcc           = false;  // -g: dense ids + GPU Compress-Graph
 int     local_block_size    = 1000;
 long    maxThreadsPerBlock  = 0;
 
@@ -59,6 +61,7 @@ int main(int argc, char* argv[]) {
         // Initialize device
         cuda_init(args.cudaDevice);
         g_verbose = args.verbose;
+        g_gpu_bcc = args.gpu_bcc;
         checker   = args.g_checker_mode;
 
         // print basic_stats
@@ -78,8 +81,30 @@ int main(int argc, char* argv[]) {
         // start external_bcc
         int bcc_count = extern_bcc(gpu_bcg);
 
-        std::cout << "The number of Biconnected Components (BCCs) in " << get_file_extension(filename) << " is: " << bcc_count << "\n";
+        std::cout << "The number of biconnected components in " << get_file_extension(filename) << " is: " << bcc_count << "\n";
 
+        // -c : ground truth. One serial Tarjan pass over the whole edge stream.
+        // This is the reference, not the product -- it reads every edge at
+        // once, which is exactly the cost the single-pass algorithm exists to
+        // avoid. It is here so a run can be checked, not benchmarked.
+        if (checker) {
+            Timer serial_timer;
+            long bridges = 0, isolated = 0;
+            long exact = serial_bcc_count(g.getList(), num_edges, num_vert,
+                                          &bridges, &isolated);
+            double serial_ms = serial_timer.stop();
+
+            std::cout << "\n========================================\n"
+                      << "       Serial reference (exact)\n"
+                      << "========================================\n\n"
+                      << "Biconnected components:   " << exact    << "\n"
+                      << "  of which bridges:       " << bridges  << "\n"
+                      << "  2-connected blocks:     " << (exact - bridges) << "\n"
+                      << "Isolated vertices:        " << isolated
+                      << "  (not counted above)\n"
+                      << "Serial Tarjan time:       " << serial_ms << " ms\n"
+                      << "========================================\n";
+        }
 
     } catch (const std::runtime_error& e) {
         std::cerr << "Error: " << e.what() << std::endl;

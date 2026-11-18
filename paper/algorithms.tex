@@ -1,0 +1,154 @@
+% =====================================================================
+%  Single-Pass gem-bcc -- two floats, subroutines in prose.
+%  Preamble: \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+%            \usepackage{amsmath,amssymb}
+% =====================================================================
+\newcommand{\nb}{n_b}
+\newcommand{\ns}{n_s}
+\newcommand{\pare}{\mathit{par}}
+\SetKwFunction{FDem}{de-merge}
+\SetKwFunction{FComp}{compress-graph}
+\SetKwFunction{FFast}{fast-bcc$^{+}$}
+\SetKwFunction{FSF}{Spanning-Forest}
+\SetKwFunction{FET}{Euler-Tour}
+\SetKwFunction{FTags}{Compute-SF-Tags}
+\SetKwFunction{FCC}{CC-Labels}
+\SetKwFunction{FPlain}{PlainEdges}
+\SetKwFunction{FFen}{Fenced}
+\SetKwFunction{FBlk}{is-block}
+\newcommand{\cls}{\mathit{cls}}
+
+% ---------------------------------------------------------------- Alg 1
+\begin{algorithm}[t]
+\caption{Single-Pass \textsc{gem-bcc} Algorithm}\label{alg:sp}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{A graph $G(V,E)$ in edge stream format, batch size $b$}
+\Output{BCC labels for edges and cut vertex status for vertices in $G$.}
+\lForEach{vertex $v$ \textup{do in parallel}}{$M[v] = v$}
+$H_0 \gets (V,\emptyset)$, \quad $\ns \gets |V|$, \quad $\nb \gets 0$
+  \tcp*{no spanning tree of $G$ is built}
+\For{$i = 1$ \KwTo $k$}{
+  $H_{i-1} \gets H_{i-1} + \FDem{$B_i, M, \nb, \ns$}$\;
+  $(H_i, I, \nb, \ns) \gets \FComp{$H_{i-1}, \nb$}$\;
+  \lForEach{vertex $u \in V(G)$ \textup{do in parallel}}{$M[u] \gets I[M[u]]$}
+}
+\lForEach{vertex $v \in V(G)$ \textup{do in parallel}}{$\mathit{label}[v] \gets M[v]$}
+  \tcp*{round $k$ already left $l$ in the dense ids}
+$\mathit{ch}[\cdot] \gets$ root each tree of the forest $H_k$\;
+\lForEach{distinct label $j$ \textup{do in parallel}}{
+  $\mathit{componentHead}[j] \gets M^{-1}(\mathit{ch}[j])$}
+\end{algorithm}
+
+% ---------------------------------------------------------------- Alg 2
+\begin{algorithm}[t]
+\caption{\textsc{de-merge} \textsc{Algorithm}}\label{alg:dem}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{A batch $B$, mapping $M$, block count $\nb$, next free id $\ns$}
+\Output{The edges $B$ contributes to $H$; $M$ and $\ns$ updated}
+$E' \gets \emptyset$\;
+\ForEach{$(u,v) \in B$ \textup{with} $M[u] \neq M[v]$ \textup{do in parallel}}{
+  \ForEach{$x \in \{u,v\}$ \textup{with} $M[x] < \nb$}{
+    $L[x] \gets$ a fresh id $\ge \ns$ \tcp*{$x$ leaves its block}
+    $E' \gets E' \cup \{(L[x],\,M[x])\}$ \tcp*{de-merge link}
+  }
+  $E' \gets E' \cup \{(L[u],\,L[v])\}$ \tcp*{the batch edge}
+}
+$M \gets L$, \quad $\ns \gets \ns + |\{x : x \text{ released}\}|$\;
+\BlankLine
+\textbf{where}\quad $L[x] = M[x]$ for every $x$ that was not released, and the
+fresh ids are allotted by a prefix sum over the released vertices.
+\end{algorithm}
+
+% ---------------------------------------------------------------- Alg 3
+\begin{algorithm}[t]
+\caption{\textsc{compress-graph} \textsc{Algorithm}}\label{alg:comp}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{A forest $H$, block count $\nb$ (ids $<\nb$ are blocks)}
+\Output{compressed $H'$, renaming $I$, new counts $\nb'$, $\ns'$}
+$l[\cdot] \gets \FFast{$H, \nb$}$ \tcp*{one class per edge of $H$}
+\lForEach{node $x$ \textup{do in parallel}}{
+  $\mathit{cut}[x] \gets \bigl|\{\,l[e] : e \text{ incident to } x\,\}\bigr| \ge 2$}
+\lForEach{class $j$ \textup{do in parallel}}{$\mathit{blk}[j] \gets \FBlk{$j$}$}
+\lForEach{node $x$ \textup{do in parallel}}{
+  $\mathit{own}[x] \gets \mathit{cut}[x] \vee \neg\,\mathit{blk}[\cls(x)]$
+  \tcp*{$x$ survives}}
+$\nb' \gets |\{j : \mathit{blk}[j]\}|$, \quad
+  $\ns' \gets \nb' + |\{x : \mathit{own}[x]\}|$\;
+$I \gets$ prefix sums sending blocks to $[0,\nb')$ and own nodes to
+  $[\nb',\ns')$\;
+$H' \gets \{\,(I[u],I[v]) : (u,v) \in E(H),\ I[u] \neq I[v]\,\}$\;
+\BlankLine
+\textbf{where}\quad $\FBlk{$j$}$ holds when class $j$ carries at least two
+edges, \emph{or} meets a node $<\nb$, \emph{or} is itself a node $<\nb$ that no
+edge of this round touched; and $\cls(x)$ is the class of $x$'s incident edges,
+with $\mathit{own}[x]$ set to $[\,x \ge \nb\,]$ when $x$ has none.
+\end{algorithm}
+
+% ---------------------------------------------------------------- Alg 4
+\begin{algorithm}[t]
+\caption{\textsc{fast-bcc}$^{+}$ \textsc{Algorithm}}\label{alg:fast}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{A graph $H$, block count $\nb$ (ids $<\nb$ are blocks)}
+\Output{labels $l[\cdot]$ and $\mathit{componentHead}[\cdot]$}
+$(E_T, R) \gets \FSF{$H$}$ \tcp*{$H$ is a forest}
+$(T,\mathit{first}[\cdot],\mathit{last}[\cdot]) \gets \FET{$E_T, R$}$\;
+$(\mathit{low}[\cdot],\mathit{high}[\cdot],F_c) \gets \FTags{$H$}$\;
+$G' \gets \FPlain{$T,\nb$}\; \cup\; F_c$ \tcp*{Skeleton graph}
+$l[\cdot] \gets \FCC{$G'$}$ \tcp*{Labels for vertices}
+\ForEach{vertex $v \in V(H) \setminus R$ \textup{do in parallel}}{
+  \lIf{$l[v] \neq l[\pare[v]]$}{$\mathit{componentHead}[l[v]] \gets \pare[v]$}
+}
+\BlankLine
+\textbf{where}\quad
+$\FPlain{$T,\nb$} = \bigl\{\,(\pare(v),v) \in T \;:\;
+   \underline{\pare(v) < \nb}\;\ \vee\ \neg\,\FFen{$\pare(v),v$}\,\bigr\}$
+\end{algorithm}
+
+% ---------------------------------------------------------------- prose
+\subsection{Subroutines}
+
+\noindent
+\emph{Why \textsc{de-merge} is needed.} \textsc{gem-bcc} builds a spanning tree
+of $G$ in a first pass for one reason: if $G_{i-1}$ is disconnected, a non-cut
+vertex of $G_{i-1}$ can become a cut vertex of $G_i$, and seeding $H_0$ with a
+spanning tree keeps every $G_i$ connected so that this never happens. Dropping
+that pass puts the failure back: our $H_0$ is edgeless, so $H_i$ is a forest
+throughout and a vertex already absorbed into a block may be separated by a
+later batch. \textsc{de-merge} (Alg.~\ref{alg:dem}) is the local repair that
+replaces the global pass. It releases from its block every endpoint of the
+batch that a new edge can no longer leave inside, giving it a fresh id above
+the watermark and a \emph{de-merge link} back to the block it left, so the
+block keeps its identity and its remaining residents while the released vertex
+is free to join a different component. A block is therefore never split, only
+reduced. The computational depth of this subroutine is $O(\log|B|)$, with a
+total work complexity of $O(|B|)$.
+
+\medskip\noindent
+\emph{Why the dense layout.} \textsc{compress-graph} (Alg.~\ref{alg:comp})
+merges the non-cut vertices of each block of $H$ into one node and keeps the
+cut vertices as they are. The three clauses of \FBlk{} are what make a block
+stable across rounds: an ordinary block holds at least two edges, but a block
+reduced by \textsc{de-merge} to a single attachment, or left with no edge at
+all, is still a finished bcc and must not be demoted to an ordinary node. The
+renumbering is the other half of the contract --- placing blocks in
+$[0,\nb')$ and everything else above is what lets the single comparison
+$x < \nb$ stand for ``$x$ is a block'' in \textsc{de-merge} and in
+\FPlain{}, with no auxiliary flag array. Its depth is $O(\log^2 n)$.
+
+\medskip\noindent
+\emph{Reading a class off an edge.} \textsc{fast-bcc}$^{+}$ returns $l[\cdot]$
+indexed by vertex, because each non-root vertex owns exactly one parent edge.
+For an arbitrary edge $e$ we write $l[e]$ for $l$ at the \emph{deeper} endpoint
+of $e$, the one with the larger $\mathit{first}$. On a tree edge
+$(\pare(v),v)$ this is $l[v]$, so the two readings agree: $l$ is already an
+edge labelling, and \textsc{Compress-Graph} needs no separate array.
+
+\medskip\noindent
+\emph{Depth, work and passes.} Each edge of $G$ is copied from cpu to gpu
+exactly \emph{once}, so the i/o complexity is $O(m/b)$ -- one pass, against
+two for \textsc{gem-bcc} and \textsc{pea-bcc}. No subroutine of the batch loop performs a
+bfs, so no term proportional to $\mathit{diameter}(H_i)$ enters: the depth of
+bcg construction is $O(k\log^2 n)$ and its work is $O((kn+m)\log n)$. Only the
+final head readout traverses $H_k$, once, outside the loop. For each $1 \le i \le
+k$, $|E(H_i)| \le |V(H_i)| \le n$ and $|B_i|$ is $O(n)$, so the space
+requirement in gpu is $O(n)$.

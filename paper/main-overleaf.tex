@@ -1,0 +1,239 @@
+% =====================================================================
+%  Single-Pass gem-bcc -- self-contained. Paste into Overleaf as main.tex.
+%  Swap \documentclass for the venue's class (e.g. acmart) when submitting;
+%  nothing below depends on `article`.
+% =====================================================================
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\begin{document}
+
+% =====================================================================
+%  Single-Pass gem-bcc -- two floats, subroutines in prose.
+%  Preamble: \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+%            \usepackage{amsmath,amssymb}
+% =====================================================================
+\newcommand{\nb}{n_b}
+\newcommand{\ns}{n_s}
+\newcommand{\pare}{\mathit{par}}
+\SetKwFunction{FDem}{de-merge}
+\SetKwFunction{FComp}{compress-graph}
+\SetKwFunction{FFast}{fast-bcc$^{+}$}
+\SetKwFunction{FSF}{Spanning-Forest}
+\SetKwFunction{FET}{Euler-Tour}
+\SetKwFunction{FTags}{Compute-SF-Tags}
+\SetKwFunction{FCC}{CC-Labels}
+\SetKwFunction{FPlain}{PlainEdges}
+\SetKwFunction{FFen}{Fenced}
+\SetKwFunction{FBlk}{is-block}
+\newcommand{\cls}{\mathit{cls}}
+
+% ---------------------------------------------------------------- Alg 1
+\begin{algorithm}[t]
+\caption{Single-Pass \textsc{gem-bcc} Algorithm}\label{alg:sp}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{A graph $G(V,E)$ in edge stream format, batch size $b$}
+\Output{BCC labels for edges and cut vertex status for vertices in $G$.}
+\lForEach{vertex $v$ \textup{do in parallel}}{$M[v] = v$}
+$H_0 \gets (V,\emptyset)$, \quad $\ns \gets |V|$, \quad $\nb \gets 0$
+  \tcp*{no spanning tree of $G$ is built}
+\For{$i = 1$ \KwTo $k$}{
+  $H_{i-1} \gets H_{i-1} + \FDem{$B_i, M, \nb, \ns$}$\;
+  $(H_i, I, \nb, \ns) \gets \FComp{$H_{i-1}, \nb$}$\;
+  \lForEach{vertex $u \in V(G)$ \textup{do in parallel}}{$M[u] \gets I[M[u]]$}
+}
+\lForEach{vertex $v \in V(G)$ \textup{do in parallel}}{$\mathit{label}[v] \gets M[v]$}
+  \tcp*{round $k$ already left $l$ in the dense ids}
+$\mathit{ch}[\cdot] \gets$ root each tree of the forest $H_k$\;
+\lForEach{distinct label $j$ \textup{do in parallel}}{
+  $\mathit{componentHead}[j] \gets M^{-1}(\mathit{ch}[j])$}
+\end{algorithm}
+
+% ---------------------------------------------------------------- Alg 2
+\begin{algorithm}[t]
+\caption{\textsc{de-merge} \textsc{Algorithm}}\label{alg:dem}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{A batch $B$, mapping $M$, block count $\nb$, next free id $\ns$}
+\Output{The edges $B$ contributes to $H$; $M$ and $\ns$ updated}
+$E' \gets \emptyset$\;
+\ForEach{$(u,v) \in B$ \textup{with} $M[u] \neq M[v]$ \textup{do in parallel}}{
+  \ForEach{$x \in \{u,v\}$ \textup{with} $M[x] < \nb$}{
+    $L[x] \gets$ a fresh id $\ge \ns$ \tcp*{$x$ leaves its block}
+    $E' \gets E' \cup \{(L[x],\,M[x])\}$ \tcp*{de-merge link}
+  }
+  $E' \gets E' \cup \{(L[u],\,L[v])\}$ \tcp*{the batch edge}
+}
+$M \gets L$, \quad $\ns \gets \ns + |\{x : x \text{ released}\}|$\;
+\BlankLine
+\textbf{where}\quad $L[x] = M[x]$ for every $x$ that was not released, and the
+fresh ids are allotted by a prefix sum over the released vertices.
+\end{algorithm}
+
+% ---------------------------------------------------------------- Alg 3
+\begin{algorithm}[t]
+\caption{\textsc{compress-graph} \textsc{Algorithm}}\label{alg:comp}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{A forest $H$, block count $\nb$ (ids $<\nb$ are blocks)}
+\Output{compressed $H'$, renaming $I$, new counts $\nb'$, $\ns'$}
+$l[\cdot] \gets \FFast{$H, \nb$}$ \tcp*{one class per edge of $H$}
+\lForEach{node $x$ \textup{do in parallel}}{
+  $\mathit{cut}[x] \gets \bigl|\{\,l[e] : e \text{ incident to } x\,\}\bigr| \ge 2$}
+\lForEach{class $j$ \textup{do in parallel}}{$\mathit{blk}[j] \gets \FBlk{$j$}$}
+\lForEach{node $x$ \textup{do in parallel}}{
+  $\mathit{own}[x] \gets \mathit{cut}[x] \vee \neg\,\mathit{blk}[\cls(x)]$
+  \tcp*{$x$ survives}}
+$\nb' \gets |\{j : \mathit{blk}[j]\}|$, \quad
+  $\ns' \gets \nb' + |\{x : \mathit{own}[x]\}|$\;
+$I \gets$ prefix sums sending blocks to $[0,\nb')$ and own nodes to
+  $[\nb',\ns')$\;
+$H' \gets \{\,(I[u],I[v]) : (u,v) \in E(H),\ I[u] \neq I[v]\,\}$\;
+\BlankLine
+\textbf{where}\quad $\FBlk{$j$}$ holds when class $j$ carries at least two
+edges, \emph{or} meets a node $<\nb$, \emph{or} is itself a node $<\nb$ that no
+edge of this round touched; and $\cls(x)$ is the class of $x$'s incident edges,
+with $\mathit{own}[x]$ set to $[\,x \ge \nb\,]$ when $x$ has none.
+\end{algorithm}
+
+% ---------------------------------------------------------------- Alg 4
+\begin{algorithm}[t]
+\caption{\textsc{fast-bcc}$^{+}$ \textsc{Algorithm}}\label{alg:fast}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{A graph $H$, block count $\nb$ (ids $<\nb$ are blocks)}
+\Output{labels $l[\cdot]$ and $\mathit{componentHead}[\cdot]$}
+$(E_T, R) \gets \FSF{$H$}$ \tcp*{$H$ is a forest}
+$(T,\mathit{first}[\cdot],\mathit{last}[\cdot]) \gets \FET{$E_T, R$}$\;
+$(\mathit{low}[\cdot],\mathit{high}[\cdot],F_c) \gets \FTags{$H$}$\;
+$G' \gets \FPlain{$T,\nb$}\; \cup\; F_c$ \tcp*{Skeleton graph}
+$l[\cdot] \gets \FCC{$G'$}$ \tcp*{Labels for vertices}
+\ForEach{vertex $v \in V(H) \setminus R$ \textup{do in parallel}}{
+  \lIf{$l[v] \neq l[\pare[v]]$}{$\mathit{componentHead}[l[v]] \gets \pare[v]$}
+}
+\BlankLine
+\textbf{where}\quad
+$\FPlain{$T,\nb$} = \bigl\{\,(\pare(v),v) \in T \;:\;
+   \underline{\pare(v) < \nb}\;\ \vee\ \neg\,\FFen{$\pare(v),v$}\,\bigr\}$
+\end{algorithm}
+
+% ---------------------------------------------------------------- prose
+\subsection{Subroutines}
+
+\noindent
+\emph{Why \textsc{de-merge} is needed.} \textsc{gem-bcc} builds a spanning tree
+of $G$ in a first pass for one reason: if $G_{i-1}$ is disconnected, a non-cut
+vertex of $G_{i-1}$ can become a cut vertex of $G_i$, and seeding $H_0$ with a
+spanning tree keeps every $G_i$ connected so that this never happens. Dropping
+that pass puts the failure back: our $H_0$ is edgeless, so $H_i$ is a forest
+throughout and a vertex already absorbed into a block may be separated by a
+later batch. \textsc{de-merge} (Alg.~\ref{alg:dem}) is the local repair that
+replaces the global pass. It releases from its block every endpoint of the
+batch that a new edge can no longer leave inside, giving it a fresh id above
+the watermark and a \emph{de-merge link} back to the block it left, so the
+block keeps its identity and its remaining residents while the released vertex
+is free to join a different component. A block is therefore never split, only
+reduced. The computational depth of this subroutine is $O(\log|B|)$, with a
+total work complexity of $O(|B|)$.
+
+\medskip\noindent
+\emph{Why the dense layout.} \textsc{compress-graph} (Alg.~\ref{alg:comp})
+merges the non-cut vertices of each block of $H$ into one node and keeps the
+cut vertices as they are. The three clauses of \FBlk{} are what make a block
+stable across rounds: an ordinary block holds at least two edges, but a block
+reduced by \textsc{de-merge} to a single attachment, or left with no edge at
+all, is still a finished bcc and must not be demoted to an ordinary node. The
+renumbering is the other half of the contract --- placing blocks in
+$[0,\nb')$ and everything else above is what lets the single comparison
+$x < \nb$ stand for ``$x$ is a block'' in \textsc{de-merge} and in
+\FPlain{}, with no auxiliary flag array. Its depth is $O(\log^2 n)$.
+
+\medskip\noindent
+\emph{Reading a class off an edge.} \textsc{fast-bcc}$^{+}$ returns $l[\cdot]$
+indexed by vertex, because each non-root vertex owns exactly one parent edge.
+For an arbitrary edge $e$ we write $l[e]$ for $l$ at the \emph{deeper} endpoint
+of $e$, the one with the larger $\mathit{first}$. On a tree edge
+$(\pare(v),v)$ this is $l[v]$, so the two readings agree: $l$ is already an
+edge labelling, and \textsc{Compress-Graph} needs no separate array.
+
+\medskip\noindent
+\emph{Depth, work and passes.} Each edge of $G$ is copied from cpu to gpu
+exactly \emph{once}, so the i/o complexity is $O(m/b)$ -- one pass, against
+two for \textsc{gem-bcc} and \textsc{pea-bcc}. No subroutine of the batch loop performs a
+bfs, so no term proportional to $\mathit{diameter}(H_i)$ enters: the depth of
+bcg construction is $O(k\log^2 n)$ and its work is $O((kn+m)\log n)$. Only the
+final head readout traverses $H_k$, once, outside the loop. For each $1 \le i \le
+k$, $|E(H_i)| \le |V(H_i)| \le n$ and $|B_i|$ is $O(n)$, so the space
+requirement in gpu is $O(n)$.
+
+\clearpage
+
+% GENERATED by experiments/gen-table.py -- do not hand-edit.
+% 190 of 319 cells filled.
+\begin{table}[t]
+\centering
+\caption{Speedup of Single-Pass \textsc{gem-bcc} over two-pass
+\textsc{gem-bcc}~\cite{europar25}, by batch size $b$. Each entry is the ratio
+of median \textsc{computeBCG} times; larger is better, and below $1.00$ we are
+slower. $|E|$ is the undirected edge count.
+\emph{a}: the baseline exceeded its own allocation budget.
+\emph{f}: the baseline faulted.
+\emph{t}: the baseline exceeded its timeout.
+--: not measured (either not run, or skipped because the baseline hung at a
+larger $b$ for the same graph).}
+\label{tab:speedup}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+ & & \multicolumn{11}{c}{batch size $b$} \\
+\cmidrule(l){3-13}
+Dataset & $|E|$\,(M) & 8k & 16k & 32k & 64k & 125k & 250k & 500k & 1M & 2M & 4M & 8M \\
+\midrule
+\multicolumn{13}{l}{\emph{Web}} \\
+~~uk-2002 & 261.8 & -- & -- & -- & \emph{t} & \emph{f} & 2.15 & 2.16 & 2.06 & 1.99 & 1.96 & 1.72 \\
+~~indochina-2004 & 151.0 & -- & -- & \emph{t} & \emph{f} & 1.76 & 2.03 & 1.87 & 1.73 & 1.52 & 1.29 & 1.53 \\
+~~in-2004 & 13.6 & 1.40 & 1.17 & 1.53 & 1.28 & 1.21 & 1.24 & 1.16 & 1.13 & 1.08 & 1.12 & 1.00 \\
+~~eu-2005 & 16.1 & -- & \emph{t} & 1.54 & 1.09 & 1.06 & 1.05 & 0.93 & 1.02 & 0.97 & 0.96 & 0.92 \\
+~~web-BerkStan & 6.7 & 1.48 & 1.57 & 1.43 & 1.43 & 1.18 & 1.23 & 1.06 & 1.05 & 0.94 & 0.79 & 0.64 \\
+\multicolumn{13}{l}{\emph{Social}} \\
+~~soc-LiveJournal1 & 42.9 & \emph{t} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & 1.59 \\
+~~ljournal-2008 & 49.5 & \emph{a} & \emph{t} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & 1.49 & 1.31 \\
+~~com-Orkut & 117.2 & \emph{t} & \emph{t} & \emph{t} & \emph{t} & 0.93 & 0.89 & 0.91 & 1.12 & 1.22 & 1.39 & 1.60 \\
+~~hollywood-2009 & 56.4 & \emph{t} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & 1.39 & 0.76 & 1.24 & 1.24 & 1.34 & 1.44 \\
+~~wiki-topcats & 25.4 & \emph{t} & \emph{t} & \emph{t} & 1.21 & 1.05 & 1.36 & 1.27 & 1.22 & 1.14 & 1.14 & 1.08 \\
+~~sx-stackoverflow & 28.2 & \emph{t} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} \\
+~~higgs-twitter & 12.5 & 0.81 & 0.74 & \emph{t} & 1.09 & 0.97 & 0.93 & 0.95 & 0.92 & 1.04 & 1.06 & 1.06 \\
+~~as-Skitter & 11.1 & 1.60 & 1.37 & 1.58 & 1.17 & 1.47 & 1.46 & 1.38 & 1.27 & 1.15 & 1.09 & 1.05 \\
+\multicolumn{13}{l}{\emph{Road}} \\
+~~europe\_osm & 54.1 & -- & \emph{t} & 2.44 & 1.87 & 2.12 & 2.09 & 2.08 & 1.97 & 1.90 & 1.74 & 1.70 \\
+~~road\_usa & 28.9 & -- & \emph{t} & 2.17 & 1.67 & 1.65 & 1.64 & 1.60 & 1.57 & 1.35 & 1.40 & 1.22 \\
+~~GAP-road & 28.9 & -- & \emph{t} & 2.16 & 1.65 & 1.65 & 1.90 & 1.89 & 1.42 & 1.36 & 1.40 & 1.20 \\
+~~germany\_osm & 12.4 & 2.18 & 1.91 & 2.48 & 1.83 & 1.74 & 1.86 & 2.30 & 1.73 & 1.46 & 1.20 & 0.98 \\
+\multicolumn{13}{l}{\emph{Citation \& bio}} \\
+~~coPapersDBLP & 15.2 & 1.29 & 1.08 & 1.30 & 0.87 & 1.07 & 0.98 & 1.10 & 1.19 & 1.16 & 1.25 & 1.12 \\
+~~coPapersCiteseer & 16.0 & \emph{t} & 1.05 & 1.27 & 1.33 & 1.27 & 0.91 & 1.09 & 1.07 & 1.07 & 1.10 & 1.11 \\
+~~kmer\_U1a & 69.4 & -- & -- & -- & -- & \emph{t} & \emph{t} & 2.93 & 2.58 & 2.50 & 2.31 & 2.10 \\
+~~kmer\_V2a & 58.6 & -- & -- & -- & 2.57 & 2.59 & 2.57 & 2.84 & 2.49 & 2.38 & 2.21 & 1.91 \\
+\multicolumn{13}{l}{\emph{Synthetic}} \\
+~~rgg\_n\_2\_24\_s0 & 132.6 & -- & -- & \emph{t} & \emph{f} & 5.03 & 4.41 & 4.51 & \emph{t} & 2.90 & 2.24 & 2.20 \\
+~~rgg\_n\_2\_23\_s0 & 63.5 & -- & \emph{t} & \emph{t} & 4.18 & 4.00 & 3.80 & 3.48 & 3.32 & 2.70 & 2.25 & 1.64 \\
+~~delaunay\_n24 & 50.3 & \emph{t} & 1.30 & 1.48 & 1.30 & 1.28 & 1.27 & 1.42 & 1.27 & 1.10 & 1.16 & 1.02 \\
+~~hugebubbles-00020 & 31.8 & -- & -- & \emph{t} & 2.01 & 1.98 & 2.28 & 2.24 & 1.89 & 1.62 & 1.25 & 1.35 \\
+~~kron\_g500-logn21 & 91.6 & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} \\
+~~kron\_g500-logn20 & 44.9 & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} \\
+~~kron\_g500-logn19 & 21.9 & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & 0.93 \\
+~~kron\_g500-logn18 & 10.6 & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & \emph{a} & 0.85 & 0.76 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{thebibliography}{9}
+\bibitem{europar25}
+Abhijeet Kumar, et al.
+\newblock External-memory biconnected components on gpus.
+\newblock In \emph{Euro-Par}, 2025.
+\end{thebibliography}
+
+\end{document}
